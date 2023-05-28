@@ -10,7 +10,7 @@ export AMENT_BUILD_MAKE_ARGS="-j$NUM_CORES"
 
 cd ~/ros2bdi_ws
 
-colcon build --packages-select ros2_bdi_interfaces
+colcon build --symlink-install --packages-select ros2_bdi_interfaces
 # rm -rf /root/ros2bdi_ws/build/ros2_bdi_interfaces
 
 colcon build --packages-select ros2_bdi_utils ros2_bdi_skills ros2_bdi_bringup ros2_bdi_core --packages-skip ros2_bdi_interfaces
