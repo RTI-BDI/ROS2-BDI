@@ -41,61 +41,61 @@ services:
     depends_on:
       - blocks_world
 
-  # docker run --platform=linux/amd64 --rm -it ros2bdi-local-webots ros2 launch ros2_bdi_on_webots carrier_b.launch.py
-  carrier_b:
-    # build:
-    #     context: .
-    #     dockerfile: Dockerfile-local-webots
-    image: ros2bdi-local-webots
-    command: ros2 launch ros2_bdi_on_webots carrier_b.launch.py
-    platform: linux/amd64
-    container_name: carrier_b
-    volumes:
-      - .:/root/ros2bdi_ws/src/ROS2-BDI # mount the ROS2-BDI src folder
-      - ./tmp:/tmp # mount the tmp folder to share PlanSys2 generated plans
-    environment:
-      - RCUTILS_LOGGING_USE_STDOUT:1
-      - RCUTILS_LOGGING_BUFFERED_STREAM:0
-    depends_on:
-      - blocks_world
+  # # docker run --platform=linux/amd64 --rm -it ros2bdi-local-webots ros2 launch ros2_bdi_on_webots carrier_b.launch.py
+  # carrier_b:
+  #   # build:
+  #   #     context: .
+  #   #     dockerfile: Dockerfile-local-webots
+  #   image: ros2bdi-local-webots
+  #   command: ros2 launch ros2_bdi_on_webots carrier_b.launch.py
+  #   platform: linux/amd64
+  #   container_name: carrier_b
+  #   volumes:
+  #     - .:/root/ros2bdi_ws/src/ROS2-BDI # mount the ROS2-BDI src folder
+  #     - ./tmp:/tmp # mount the tmp folder to share PlanSys2 generated plans
+  #   environment:
+  #     - RCUTILS_LOGGING_USE_STDOUT:1
+  #     - RCUTILS_LOGGING_BUFFERED_STREAM:0
+  #   depends_on:
+  #     - blocks_world
   
-  # docker run --platform=linux/amd64 --rm -it ros2bdi-local-webots ros2 launch ros2_bdi_on_webots carrier_c.launch.py
-  carrier_c:
-    # build:
-    #     context: .
-    #     dockerfile: Dockerfile-local-webots
-    image: ros2bdi-local-webots
-    command: ros2 launch ros2_bdi_on_webots carrier_c.launch.py
-    platform: linux/amd64
-    container_name: carrier_c
-    volumes:
-      - .:/root/ros2bdi_ws/src/ROS2-BDI # mount the ROS2-BDI src folder
-      - ./tmp:/tmp # mount the tmp folder to share PlanSys2 generated plans
-    environment:
-      - RCUTILS_LOGGING_USE_STDOUT:1
-      - RCUTILS_LOGGING_BUFFERED_STREAM:0
-    depends_on:
-      - blocks_world
+  # # docker run --platform=linux/amd64 --rm -it ros2bdi-local-webots ros2 launch ros2_bdi_on_webots carrier_c.launch.py
+  # carrier_c:
+  #   # build:
+  #   #     context: .
+  #   #     dockerfile: Dockerfile-local-webots
+  #   image: ros2bdi-local-webots
+  #   command: ros2 launch ros2_bdi_on_webots carrier_c.launch.py
+  #   platform: linux/amd64
+  #   container_name: carrier_c
+  #   volumes:
+  #     - .:/root/ros2bdi_ws/src/ROS2-BDI # mount the ROS2-BDI src folder
+  #     - ./tmp:/tmp # mount the tmp folder to share PlanSys2 generated plans
+  #   environment:
+  #     - RCUTILS_LOGGING_USE_STDOUT:1
+  #     - RCUTILS_LOGGING_BUFFERED_STREAM:0
+  #   depends_on:
+  #     - blocks_world
   
-  # docker run --platform=linux/amd64 --rm -it ros2bdi-local-webots ros2 launch ros2_bdi_on_webots gripper_a.launch.py
-  gripper_a:
-    # build:
-    #     context: .
-    #     dockerfile: Dockerfile-local-webots
-    image: ros2bdi-local-webots
-    command: ros2 launch ros2_bdi_on_webots gripper_a.launch.py
-    platform: linux/amd64
-    container_name: gripper_a
-    volumes:
-      - .:/root/ros2bdi_ws/src/ROS2-BDI # mount the ROS2-BDI src folder
-      - ./tmp:/tmp # mount the tmp folder to share PlanSys2 generated plans
-    environment:
-      - RCUTILS_LOGGING_USE_STDOUT:1
-      - RCUTILS_LOGGING_BUFFERED_STREAM:0
-    depends_on:
-      - carrier_a
-      - carrier_b
-      - carrier_c
+  # # docker run --platform=linux/amd64 --rm -it ros2bdi-local-webots ros2 launch ros2_bdi_on_webots gripper_a.launch.py
+  # gripper_a:
+  #   # build:
+  #   #     context: .
+  #   #     dockerfile: Dockerfile-local-webots
+  #   image: ros2bdi-local-webots
+  #   command: ros2 launch ros2_bdi_on_webots gripper_a.launch.py
+  #   platform: linux/amd64
+  #   container_name: gripper_a
+  #   volumes:
+  #     - .:/root/ros2bdi_ws/src/ROS2-BDI # mount the ROS2-BDI src folder
+  #     - ./tmp:/tmp # mount the tmp folder to share PlanSys2 generated plans
+  #   environment:
+  #     - RCUTILS_LOGGING_USE_STDOUT:1
+  #     - RCUTILS_LOGGING_BUFFERED_STREAM:0
+  #   depends_on:
+  #     - carrier_a
+  #     # - carrier_b
+  #     # - carrier_c
 
   # docker run --rm -d --name=forwarder-container2000 --network=host alpine/socat TCP-LISTEN:2000,fork TCP:host.docker.internal:2000
   forwarder-2000:

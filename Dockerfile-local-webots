@@ -88,10 +88,10 @@ RUN apt install -y ros-humble-webots-ros2
 #     export AMENT_BUILD_MAKE_ARGS="-j$NUM_CORES" && \
 #     colcon build --symlink-install
 
-# source entrypoint setup
-RUN sed --in-place --expression \
-      '$isource "/root/webots_ros2_driver_ws/install/setup.bash"' \
-      /ros_entrypoint.sh
+# # source entrypoint setup
+# RUN sed --in-place --expression \
+#       '$isource "/root/webots_ros2_driver_ws/install/setup.bash"' \
+#       /ros_entrypoint.sh
 
 
 
@@ -184,8 +184,9 @@ CMD ["/bin/bash", "-c", \
 # " 
 # 
 # First of all, to use webots on host machine (while ros2bdi on docker):
-# export WEBOTS_HOME=/Applications/Webots.app
-# export WEBOTS_HOME_PATH=$WEBOTS_HOME/Contents # Not sure about this!
+# MAC: export WEBOTS_HOME=/Applications/Webots.app
+# LINUX: export WEBOTS_HOME=/usr/local/webots
+# export WEBOTS_HOME_PATH=$WEBOTS_HOME/Contents # This should not be necessary
 # python3 local_simulation_server.py
 #
 # On mac, because of network of docker virtual machine, need also to forward request from docker VM to host machine
