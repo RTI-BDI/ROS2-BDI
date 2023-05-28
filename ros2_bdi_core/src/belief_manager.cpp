@@ -112,7 +112,7 @@ void BeliefManager::init()
         milliseconds(500),
         bind(&BeliefManager::step, this));
 
-    RCLCPP_INFO(this->get_logger(), "Belief manager node initialized");
+    RCLCPP_INFO(this->get_logger(), "Belief manager node initialized for %s", this->get_name());
 }
   
 /*

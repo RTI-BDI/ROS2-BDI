@@ -87,13 +87,16 @@ def AgentLaunchDescription(
         default_value=["info"],
         description='Logging level')
     
-    stdout_linebuf_envvar = SetEnvironmentVariable(
-        'RCUTILS_CONSOLE_STDOUT_LINE_BUFFERED', '1')
+    stdout_envvar = SetEnvironmentVariable(
+        'RCUTILS_LOGGING_USE_STDOUT', '1')
+    buffered_stream_envvar = SetEnvironmentVariable(
+        'RCUTILS_LOGGING_BUFFERED_STREAM', '0')
     
     ld = LaunchDescription()
 
     #set environment variables
-    ld.add_action(stdout_linebuf_envvar)
+    ld.add_action(stdout_envvar)
+    ld.add_action(buffered_stream_envvar)
     ld.add_action(declare_namespace_cmd)
     ld.add_action(log_level_cmd)
 

@@ -33,7 +33,7 @@ def build_PlanSys2Monitor(namespace, agent_id, init_params):
     return Node(
         package='ros2_bdi_core',
         executable='plansys2_monitor',
-        name='plansys2_monitor',
+        # name='plansys2_monitor',
         namespace=namespace,
         output='screen',
         parameters=[ {AGENT_ID_PARAM: agent_id}, {DEBUG_PARAM: debug} ])
@@ -46,7 +46,7 @@ def build_BeliefManager(namespace, agent_id, init_params):
     return Node(
         package='ros2_bdi_core',
         executable='belief_manager',
-        name='belief_manager',
+        # name='belief_manager',
         namespace=namespace,
         output='screen',
         parameters= [ {AGENT_ID_PARAM: agent_id}, {DEBUG_PARAM: debug}  ])
@@ -60,7 +60,7 @@ def build_EventListener(namespace, agent_id, init_params):
     return Node(
         package='ros2_bdi_core',
         executable='event_listener',
-        name='event_listener',
+        # name='event_listener',
         namespace=namespace,
         output='screen',
         parameters= [ {AGENT_ID_PARAM: agent_id}, {DEBUG_PARAM: debug} ])
@@ -111,7 +111,7 @@ def build_Scheduler(namespace, agent_id, init_params):
     return Node(
         package='ros2_bdi_core',
         executable='scheduler',
-        name='scheduler',
+        # name='scheduler',
         namespace=namespace,
         output='screen',
         parameters=[
@@ -144,7 +144,7 @@ def build_PlanDirector(namespace, agent_id, init_params):
     return Node(
         package='ros2_bdi_core',
         executable='plan_director',
-        name='plan_director',
+        # name='plan_director',
         namespace=namespace,
         output='screen',
         parameters=[
@@ -180,7 +180,7 @@ def build_MARequestHandlerNode(namespace, agent_id, agent_group, init_params):
     return Node(
         package='ros2_bdi_core',
         executable='ma_request_handler',
-        name='ma_request_handler',
+        # name='ma_request_handler', # https://github.com/ros2/launch/issues/204
         namespace=namespace,
         output='screen',
         parameters=communication_node_params 

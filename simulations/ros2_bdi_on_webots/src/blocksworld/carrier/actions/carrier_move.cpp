@@ -74,6 +74,7 @@ class CarrierMove : public BDIActionExecutor
         void carrierMoveStatusCallback(const MoveStatus::SharedPtr msg)
         {
             move_status_ = *msg;
+            // RCLCPP_INFO(this->get_logger(), "carrierMoveStatusCallback x:%f, y:%f, z:%f", msg->current_pos.x, msg->current_pos.y, msg->current_pos.z);
         }
 
         rclcpp_lifecycle::LifecyclePublisher<example_interfaces::msg::String>::SharedPtr move_carrier_cmd_publisher_;

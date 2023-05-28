@@ -45,7 +45,7 @@ class CarrierRobotDriver:
         self.__node = rclpy.create_node('my_'+self.__robot.getName()+'_driver')
         # self.__node.create_subscription(Twist, '/'+self.__robot.getName()+'/cmd_vel', self.__cmd_vel_callback, rclpy.qos.QoSProfile(depth=1, reliability=1))
         self.__node.create_subscription(String, '/'+self.__robot.getName()+'/cmd_target', self.__cmd_target, rclpy.qos.QoSProfile(depth=1, reliability=1))
-        self.__node.create_subscription(PointStamped, '/'+self.__robot.getName()+'_driver/gps', self.__callback_carrier_gps, rclpy.qos.QoSProfile(depth=2, reliability=2))
+        self.__node.create_subscription(PointStamped, '/'+self.__robot.getName()+'/gps', self.__callback_carrier_gps, rclpy.qos.QoSProfile(depth=2, reliability=2))
         self.__move_status_publisher_ = self.__node.create_publisher(MoveStatus, '/'+self.__robot.getName()+'/move_status', rclpy.qos.QoSProfile(depth=2, reliability=1))
         
         self.__node.get_logger().info(self.__robot.getName() + ' driver support node set up')
