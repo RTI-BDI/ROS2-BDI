@@ -88,7 +88,7 @@ void Sensor::init()
             seconds(init_sleep_sec),
             bind(&Sensor::startSensing, this));
 
-    RCLCPP_INFO(this->get_logger(), "Sensor node \"" + this->get_parameter(PARAM_SENSOR_NAME).as_string() + "\" initialized");
+    RCLCPP_INFO(this->get_logger(), ("Sensor node \"" + this->get_parameter(PARAM_SENSOR_NAME).as_string() + "\" initialized").c_str());
 }
 
 /*

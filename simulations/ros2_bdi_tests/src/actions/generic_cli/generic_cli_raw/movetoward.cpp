@@ -46,8 +46,8 @@ private:
 
     float progress_100 = ((progress_ * 100.0) < 100.0)? (progress_ * 100.0) : 100.0; 
     RCLCPP_INFO(this->get_logger(), 
-        "[move " + args[0] + " from " +  args[1] + " toward " + args[2] + "] "+ 
-        "progress: %.1f%%", progress_100);
+        ("[move " + args[0] + " from " +  args[1] + " toward " + args[2] + "] "+ 
+        "progress: %.1f%%").c_str(), progress_100);
   }
 
   float progress_;
@@ -65,8 +65,8 @@ int main(int argc, char ** argv)
   node->set_parameter(rclcpp::Parameter("specialized_arguments", specialized_arguments));
   
   RCLCPP_INFO(node->get_logger(), 
-      "\"" + node->get_parameter("action_name").as_string() + 
-      "\" action performer for agent: " + node->get_parameter("specialized_arguments").as_string_array()[0]);
+      ("\"" + node->get_parameter("action_name").as_string() + 
+      "\" action performer for agent: " + node->get_parameter("specialized_arguments").as_string_array()[0]).c_str());
 
   //action node, once created, must pass to inactive state to be ready to execute. 
   // ActionExecutorClient is a managed node (https://design.ros2.org/articles/node_lifecycle.html)

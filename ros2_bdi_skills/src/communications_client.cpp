@@ -70,7 +70,7 @@ CheckBeliefResult CommunicationsClient::checkBeliefRequest(const string& agent_r
     }
     catch(const std::exception &e)
     {
-        RCLCPP_ERROR(node_->get_logger(), "Response error in " + serviceName);
+        RCLCPP_ERROR(node_->get_logger(), ("Response error in " + serviceName).c_str());
     }
 
     return res;
@@ -119,7 +119,7 @@ UpdBeliefResult CommunicationsClient::updBeliefRequest(const string& agent_ref, 
     }
     catch(const std::exception &e)
     {
-        RCLCPP_ERROR(node_->get_logger(), "Response error in " + serviceName);
+        RCLCPP_ERROR(node_->get_logger(), ("Response error in " + serviceName).c_str());
     }
 
     return res;
@@ -163,7 +163,7 @@ CheckDesireResult CommunicationsClient::checkDesireRequest(const string& agent_r
     }
     catch(const std::exception &e)
     {
-        RCLCPP_ERROR(node_->get_logger(), "Response error in " + serviceName);
+        RCLCPP_ERROR(node_->get_logger(), ("Response error in " + serviceName).c_str());
     }
     
     return res;
@@ -212,7 +212,7 @@ UpdDesireResult CommunicationsClient::updDesireRequest(const string& agent_ref, 
     }
     catch(const std::exception &e)
     {
-        RCLCPP_ERROR(node_->get_logger(), "Response error in " + serviceName);
+        RCLCPP_ERROR(node_->get_logger(), ("Response error in " + serviceName).c_str());
     }
 
     return res;

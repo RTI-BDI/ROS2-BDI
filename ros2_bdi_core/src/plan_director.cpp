@@ -268,7 +268,7 @@ bool PlanDirector::startPlanExecution(const ManagedPlan& mp)
             string plan_string = "";
             for(PlanItem pi : plan_to_execute.items)
                 plan_string +=  std::to_string(pi.time) + "\t" + pi.action + "\t\t" + std::to_string(pi.duration) + "\n";
-            RCLCPP_INFO(this->get_logger(), "Started new plan execution:\n" + plan_string + "\n");
+            RCLCPP_INFO(this->get_logger(), ("Started new plan execution:\n" + plan_string + "\n").c_str());
         }
         
     }
@@ -329,7 +329,7 @@ bool PlanDirector::validPlanRequest(const BDIPlanExecution::Request::SharedPtr r
                 if(actDA->parameters.size() != actionItems.size() - 1)
                 {
                     if(this->get_parameter(PARAM_DEBUG).as_bool())
-                        RCLCPP_INFO(this->get_logger(), "Plan request operation not valid: dur. action " + actName + " has wrong number of params");
+                        RCLCPP_INFO(this->get_logger(), ("Plan request operation not valid: dur. action " + actName + " has wrong number of params").c_str());
                     return false;//plan item not valid -> unexpected num of parameters wrt domain definition of durative act
                 }  
                     
@@ -340,7 +340,7 @@ bool PlanDirector::validPlanRequest(const BDIPlanExecution::Request::SharedPtr r
                     if(!paramInstanceOpt.has_value())
                     {
                         if(this->get_parameter(PARAM_DEBUG).as_bool())
-                            RCLCPP_INFO(this->get_logger(), "Plan request operation not valid: dur. action " + actName + " presents invalid instance " + actionItems[i+1]);
+                            RCLCPP_INFO(this->get_logger(), ("Plan request operation not valid: dur. action " + actName + " presents invalid instance " + actionItems[i+1]).c_str());
                         
                         return false;//invalid instance
                     }  
@@ -354,8 +354,8 @@ bool PlanDirector::validPlanRequest(const BDIPlanExecution::Request::SharedPtr r
                             if(std::find(paramDA.sub_types.begin(), paramDA.sub_types.end(), paramInstance.type) == paramDA.sub_types.end())//not even in the subtype array
                             {
                                 if(this->get_parameter(PARAM_DEBUG).as_bool())
-                                    RCLCPP_INFO(this->get_logger(), "Plan request operation not valid: dur. action " + actName + " presents invalid typed instance " + actionItems[i+1] +
-                                        ": " + paramDA.type + " needed, " + paramInstance.type + " found");
+                                    RCLCPP_INFO(this->get_logger(), ("Plan request operation not valid: dur. action " + actName + " presents invalid typed instance " + actionItems[i+1] +
+                                        ": " + paramDA.type + " needed, " + paramInstance.type + " found").c_str());
                                 
                                 return false;//instance valid, but do not respect type of the expected param for the action
                             }
@@ -383,7 +383,7 @@ void PlanDirector::handlePlanRequest(const BDIPlanExecution::Request::SharedPtr 
     }
 
     string req_action = (request->request == request->EXECUTE)? "execute" : "abort";
-    RCLCPP_INFO(this->get_logger(), "Received request to " + req_action + " plan fulfilling desire \"" + request->plan.target.name + "\"");
+    RCLCPP_INFO(this->get_logger(), ("Received request to " + req_action + " plan fulfilling desire \"" + request->plan.target.name + "\"").c_str());
     ManagedDesire mdPlan = ManagedDesire{request->plan.target};
     ManagedConditionsDNF mdPlanPrecondition = ManagedConditionsDNF{request->plan.precondition};
     ManagedConditionsDNF mdPlanContext = ManagedConditionsDNF{request->plan.context};
@@ -474,7 +474,7 @@ void PlanDirector::checkPlanExecution()
         if(this->get_parameter(PARAM_DEBUG).as_bool()){
             string result_s =   ((planExecutionInfo.status == planExecutionInfo.SUCCESSFUL)?
                 "executed successfully" : "aborted");
-            RCLCPP_INFO(this->get_logger(), "Plan " + result_s + ": READY to execute new plan now\n");    
+            RCLCPP_INFO(this->get_logger(), ("Plan " + result_s + ": READY to execute new plan now\n").c_str());    
         }
     }else{
         //STILL running...

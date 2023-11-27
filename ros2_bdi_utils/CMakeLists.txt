@@ -13,6 +13,8 @@ find_package(plansys2_domain_expert REQUIRED)
 find_package(plansys2_problem_expert REQUIRED)
 find_package(ros2_bdi_interfaces REQUIRED)
 
+find_package(yaml-cpp REQUIRED)
+
 include_directories(include)
 
 set(UTILS-SOURCES

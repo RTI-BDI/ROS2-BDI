@@ -82,7 +82,7 @@ rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
   {
     progress_ = 0.0f;
     if(this->get_parameter(PARAM_DEBUG).as_bool())
-      RCLCPP_INFO(this->get_logger(), "Action executor controller for \"" + action_name_ + "\" ready for execution");
+      RCLCPP_INFO(this->get_logger(), ("Action executor controller for \"" + action_name_ + "\" ready for execution").c_str());
 
     return ActionExecutorClient::on_activate(previous_state);
   }
@@ -130,7 +130,7 @@ void BDIActionExecutor::do_work()
     send_feedback(progress_, feedback_string);//send feedback to plansys2 executor
 
     if(this->get_parameter(PARAM_DEBUG).as_bool())
-      RCLCPP_INFO(this->get_logger(), feedback_string);
+      RCLCPP_INFO(this->get_logger(), (feedback_string).c_str());
   }
 }
 

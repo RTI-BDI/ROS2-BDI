@@ -144,7 +144,7 @@ private:
     // belief set update subscription
     rclcpp::Subscription<ros2_bdi_interfaces::msg::BeliefSet>::SharedPtr belief_set_subscriber_;
     
-    rclcpp::callback_group::CallbackGroup::SharedPtr callback_group_upd_subscribers_;
+    rclcpp::CallbackGroup::CallbackGroup::SharedPtr callback_group_upd_subscribers_;
 
     // mirroring of the current state of the desire set
     std::set<BDIManaged::ManagedDesire> desire_set_;

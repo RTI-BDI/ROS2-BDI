@@ -86,16 +86,16 @@ set<ManagedReactiveRule> EventListener::init_reactive_rules()
         
 
         if(this->get_parameter(PARAM_DEBUG).as_bool())
-            RCLCPP_INFO(this->get_logger(), "Reactive rules initialization performed through " + init_reactive_rules_filepath);
+            RCLCPP_INFO(this->get_logger(), ("Reactive rules initialization performed through " + init_reactive_rules_filepath).c_str());
     
     }catch(const YAML::BadFile& bfile){
-        RCLCPP_ERROR(this->get_logger(), "Bad File: Reactive rules initialization failed because init. file " + init_reactive_rules_filepath + " hasn't been found");
+        RCLCPP_ERROR(this->get_logger(), ("Bad File: Reactive rules initialization failed because init. file " + init_reactive_rules_filepath + " hasn't been found").c_str());
     }catch(const YAML::ParserException& bpars){
-        RCLCPP_ERROR(this->get_logger(), "YAML Parser Exception: Reactive rules initialization failed because init. file " + init_reactive_rules_filepath + " doesn't present a valid YAML format");
+        RCLCPP_ERROR(this->get_logger(), ("YAML Parser Exception: Reactive rules initialization failed because init. file " + init_reactive_rules_filepath + " doesn't present a valid YAML format").c_str());
     }catch(const YAML::BadConversion& bconvfile){
-        RCLCPP_ERROR(this->get_logger(), "Bad Conversion: Reactive rules initialization failed because init. file " + init_reactive_rules_filepath + " doesn't present a valid reactive rules array");
+        RCLCPP_ERROR(this->get_logger(), ("Bad Conversion: Reactive rules initialization failed because init. file " + init_reactive_rules_filepath + " doesn't present a valid reactive rules array").c_str());
     }catch(const YAML::InvalidNode& invalid_node){
-        RCLCPP_ERROR(this->get_logger(), "Invalid Node: Reactive rules initialization failed because init. file " + init_reactive_rules_filepath + " doesn't present a valid reactive rules array");
+        RCLCPP_ERROR(this->get_logger(), ("Invalid Node: Reactive rules initialization failed because init. file " + init_reactive_rules_filepath + " doesn't present a valid reactive rules array").c_str());
     }
 
     return rules;
@@ -195,7 +195,7 @@ void EventListener::apply_rule(const BDIManaged::ManagedReactiveRule& reactive_r
             if(belief_set_.count(bset_upd.second) == 0)
             {
                 if(this->get_parameter(PARAM_DEBUG).as_bool())
-                    RCLCPP_INFO(this->get_logger(), "Adding belief " + bel_to_string);
+                    RCLCPP_INFO(this->get_logger(), ("Adding belief " + bel_to_string).c_str());
                 add_belief_publisher_->publish(bset_upd.second.toBelief());//add belief to bset if it is NOT there
             }
         }
@@ -204,7 +204,7 @@ void EventListener::apply_rule(const BDIManaged::ManagedReactiveRule& reactive_r
             if(belief_set_.count(bset_upd.second) > 0)
             {
                 if(this->get_parameter(PARAM_DEBUG).as_bool())
-                    RCLCPP_INFO(this->get_logger(), "Deleting belief " + bel_to_string);
+                    RCLCPP_INFO(this->get_logger(), ("Deleting belief " + bel_to_string).c_str());
                 del_belief_publisher_->publish(bset_upd.second.toBelief());//del belief to bset
             }
         }
@@ -216,14 +216,14 @@ void EventListener::apply_rule(const BDIManaged::ManagedReactiveRule& reactive_r
         if(dset_upd.first == ReactiveOp::ADD)
         {
             if(this->get_parameter(PARAM_DEBUG).as_bool())
-                RCLCPP_INFO(this->get_logger(), "Adding desire " + dset_upd.second.getName());
+                RCLCPP_INFO(this->get_logger(), ("Adding desire " + dset_upd.second.getName()).c_str());
 
             add_desire_publisher_->publish(dset_upd.second.toDesire());//add desire to dset 
         }
         else
         {
             if(this->get_parameter(PARAM_DEBUG).as_bool())
-                RCLCPP_INFO(this->get_logger(), "Deleting desire " + dset_upd.second.getName());
+                RCLCPP_INFO(this->get_logger(), ("Deleting desire " + dset_upd.second.getName()).c_str());
 
             del_desire_publisher_->publish(dset_upd.second.toDesire());//del desire to dset
         }

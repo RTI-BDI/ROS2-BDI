@@ -1,0 +1,18 @@
+version: '1'
+
+services:
+  bdi_cleaner_simple:
+    build: ./
+    command: ros2 launch ros2_bdi_tests bdi_cleaner_simple.launch.py
+
+  belief_set:
+    build: ./
+    command: ros2 topic echo /cleaner/belief_set              # belief set echo
+
+  desire_set:
+    build: ./
+    command: ros2 topic echo /cleaner/desire_set              # desire set echo
+
+  plan_execution_info:
+    build: ./
+    command: ros2 topic echo /cleaner/plan_execution_info     # plan execution progress echo
