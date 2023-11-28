@@ -61,7 +61,7 @@ CMD ["/bin/bash", "-c", "source /root/ros2bdi_ws/install/setup.bash && source /o
 
 
 # to build
-# sudo docker build --rm  --tag ros2bdi-humble .
+# sudo docker build --platform=linux/amd64 --rm  --tag ros2bdi-humble .
 
 # to run
 # sudo docker run -v /tmp/.X11-unix/:/tmp/.X11-unix/ --volume="$HOME/.Xauthority:/root/.Xauthority:rw" --network=host --name ubuntu_bash --env="DISPLAY" --rm -i -t ros2bdi-humble bash

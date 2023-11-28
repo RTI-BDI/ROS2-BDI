@@ -1,0 +1,104 @@
+ARG BASE_IMAGE=ros2bdi-humble
+#nvidia/cuda:11.8.0-base-ubuntu22.04
+FROM ${BASE_IMAGE} AS downloader
+
+# Determine Webots version to be used and set default argument
+ARG WEBOTS_VERSION=R2023b
+ARG WEBOTS_PACKAGE_PREFIX=
+
+# Disable dpkg/gdebi interactive dialogs
+ENV DEBIAN_FRONTEND=noninteractive
+
+WORKDIR /
+
+RUN apt-get update && apt-get install --yes wget bzip2 && rm -rf /var/lib/apt/lists/ && \
+ wget https://github.com/cyberbotics/webots/releases/download/$WEBOTS_VERSION/webots-$WEBOTS_VERSION-x86-64$WEBOTS_PACKAGE_PREFIX.tar.bz2 && \
+ tar xjf webots-*.tar.bz2 && rm webots-*.tar.bz2
+
+FROM ${BASE_IMAGE}
+
+# Disable dpkg/gdebi interactive dialogs
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install Webots runtime dependencies
+RUN apt-get update && apt-get install --yes wget xvfb locales && rm -rf /var/lib/apt/lists/ && \
+  wget https://raw.githubusercontent.com/cyberbotics/webots/master/scripts/install/linux_runtime_dependencies.sh && \
+  chmod +x linux_runtime_dependencies.sh && ./linux_runtime_dependencies.sh && rm ./linux_runtime_dependencies.sh && rm -rf /var/lib/apt/lists/
+
+# Install Webots
+WORKDIR /usr/local
+COPY --from=downloader /webots /usr/local/webots/
+ENV QTWEBENGINE_DISABLE_SANDBOX=1
+ENV WEBOTS_HOME /usr/local/webots
+ENV PATH /usr/local/webots:${PATH}
+
+RUN mkdir -p /tmp/webots/root
+
+RUN apt-get update && apt-get install -y \
+    libgl1-mesa-glx \
+    libgl1-mesa-dri
+
+RUN apt-get update && apt-get install -y \
+    dbus-x11
+
+# RUN apt-get update && apt-get install -y \
+#     libxcb1 \
+#     libx11-xcb1 \
+#     libxcb-keysyms1 \
+#     libxcb-image0 \
+#     libxcb-shm0 \
+#     libxcb-icccm4 \
+#     libxcb-sync1 \
+#     libxcb-xfixes0 \
+#     libxcb-randr0 \
+#     libxcb-render-util0
+
+ENV QT_QPA_PLATFORM_PLUGIN_PATH=/usr/lib/x86_64-linux-gnu/qt5/plugins/platforms
+
+# Enable OpenGL capabilities
+ENV NVIDIA_DRIVER_CAPABILITIES graphics,compute,utility
+
+# Set a user name to fix a warning
+ENV USER root
+
+# Set the locales
+RUN locale-gen en_US.UTF-8
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
+
+# Install ros-humble-webots-ros2
+SHELL ["/bin/bash", "-c"]
+
+RUN apt-get update && apt install -y ros-humble-webots-ros2
+# libyaml-cpp0.7
+
+WORKDIR /root
+
+COPY . ros2bdi_ws/src/ROS2-BDI
+# VOLUME ros2bdi_ws/src/ROS2-BDI
+
+RUN NUM_CORES=$(nproc) && \
+    export MAKEFLAGS="-j$NUM_CORES" && \
+    export AMENT_BUILD_GRADLE_ARGS="-j$NUM_CORES" && \
+    export AMENT_BUILD_MAKE_ARGS="-j$NUM_CORES" && \
+    source /root/plansys2_ws/install/setup.bash && \
+    cd ~/ros2bdi_ws && \
+    colcon build --symlink-install --packages-select webots_ros2_simulations_interfaces webots_ros2_simulations ros2_bdi_on_webots
+
+# source entrypoint setup
+RUN sed --in-place --expression \
+      '$isource "/root/plansys2_ws/install/setup.bash"' \
+      /ros_entrypoint.sh
+      
+RUN sed --in-place --expression \
+      '$isource "/root/ros2bdi_ws/install/setup.bash"' \
+      /ros_entrypoint.sh
+
+# Finally open a bash command to let the user interact
+CMD ["/bin/bash"]
+
+
+# to build
+# sudo docker build --platform=linux/amd64 --rm  --tag webots-humble . --file Dockerfile-webots-humble
+
+# to run
+# sudo docker run -v /tmp/.X11-unix/:/tmp/.X11-unix/ --volume="$HOME/.Xauthority:/root/.Xauthority:rw" --env="DISPLAY=host.docker.internal:0" --rm -it webots-humble bash

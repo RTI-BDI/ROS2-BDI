@@ -33,7 +33,7 @@ RUN cd ~/plansys2_ws && source /opt/ros/${ROS_DISTRO}/setup.bash && colcon build
 CMD /bin/bash
 
 # to build
-# sudo docker build --rm  --tag plansys2-humble . --file Dockerfile-plansys2-humble
+# sudo docker build --platform=linux/amd64 --rm  --tag plansys2-humble . --file Dockerfile-plansys2-humble
 
 # to run
 # sudo docker run -v /tmp/.X11-unix/:/tmp/.X11-unix/ --volume="$HOME/.Xauthority:/root/.Xauthority:rw" --network=host --name ubuntu_bash --env="DISPLAY" --rm -i -t plansys2-humble bash
