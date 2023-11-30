@@ -108,6 +108,7 @@ def AgentLaunchDescription(
             'plansys2_bringup_launch_distributed.py')),
 
         launch_arguments={
+            'problem_file': '', # required in new version of PlanSys2
             'model_file': init_params[PDDL_FILE_PARAM],
             'namespace': namespace
             }.items()
