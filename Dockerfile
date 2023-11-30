@@ -1,4 +1,4 @@
-FROM plansys2-humble
+FROM webots-plansys2-humble
 
 SHELL ["/bin/bash", "-c"]
 
@@ -48,11 +48,15 @@ RUN NUM_CORES=$(nproc) && \
     source /root/ros2bdi_ws/install/setup.bash && \
     colcon build --packages-select ros2_bdi_tests
 
+RUN NUM_CORES=$(nproc) && \
+    export MAKEFLAGS="-j$NUM_CORES" && \
+    export AMENT_BUILD_GRADLE_ARGS="-j$NUM_CORES" && \
+    export AMENT_BUILD_MAKE_ARGS="-j$NUM_CORES" && \
+    source /root/plansys2_ws/install/setup.bash && \
+    cd ~/ros2bdi_ws && \
+    colcon build --symlink-install --packages-select webots_ros2_simulations_interfaces webots_ros2_simulations ros2_bdi_on_webots
+
 # source entrypoint setup
-RUN sed --in-place --expression \
-      '$isource "/root/plansys2_ws/install/setup.bash"' \
-      /ros_entrypoint.sh
-      
 RUN sed --in-place --expression \
       '$isource "/root/ros2bdi_ws/install/setup.bash"' \
       /ros_entrypoint.sh
@@ -64,4 +68,4 @@ CMD ["/bin/bash", "-c", "source /root/ros2bdi_ws/install/setup.bash && source /o
 # sudo docker build --platform=linux/amd64 --rm  --tag ros2bdi-humble .
 
 # to run
-# sudo docker run -v /tmp/.X11-unix/:/tmp/.X11-unix/ --volume="$HOME/.Xauthority:/root/.Xauthority:rw" --network=host --name ubuntu_bash --env="DISPLAY" --rm -i -t ros2bdi-humble bash
+# sudo docker run --gpus=all -v /tmp/.X11-unix/:/tmp/.X11-unix/ --volume="$HOME/.Xauthority:/root/.Xauthority:rw" --network=host -e DISPLAY --rm -it ros2bdi-humble bash

@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=ros2bdi-humble
+ARG BASE_IMAGE=plansys2-humble
 #nvidia/cuda:11.8.0-base-ubuntu22.04
 FROM ${BASE_IMAGE} AS downloader
 
@@ -67,34 +67,12 @@ SHELL ["/bin/bash", "-c"]
 
 RUN apt-get update && apt install -y ros-humble-webots-ros2
 
-WORKDIR /root
-
-COPY . ros2bdi_ws/src/ROS2-BDI
-# VOLUME ros2bdi_ws/src/ROS2-BDI
-
-RUN NUM_CORES=$(nproc) && \
-    export MAKEFLAGS="-j$NUM_CORES" && \
-    export AMENT_BUILD_GRADLE_ARGS="-j$NUM_CORES" && \
-    export AMENT_BUILD_MAKE_ARGS="-j$NUM_CORES" && \
-    source /root/plansys2_ws/install/setup.bash && \
-    cd ~/ros2bdi_ws && \
-    colcon build --symlink-install --packages-select webots_ros2_simulations_interfaces webots_ros2_simulations ros2_bdi_on_webots
-
-# source entrypoint setup
-RUN sed --in-place --expression \
-      '$isource "/root/plansys2_ws/install/setup.bash"' \
-      /ros_entrypoint.sh
-      
-RUN sed --in-place --expression \
-      '$isource "/root/ros2bdi_ws/install/setup.bash"' \
-      /ros_entrypoint.sh
-
 # Finally open a bash command to let the user interact
 CMD ["/bin/bash"]
 
 
 # to build
-# sudo docker build --platform=linux/amd64 --rm  --tag webots-humble . --file Dockerfile-webots-humble
+# sudo docker build --platform=linux/amd64 --rm  --tag webots-plansys2-humble . --file Dockerfile-webots-humble
 
 # to run
 

@@ -30,6 +30,11 @@ RUN apt-get install -y vim gdb terminator
 
 RUN cd ~/plansys2_ws && source /opt/ros/${ROS_DISTRO}/setup.bash && colcon build --symlink-install
 
+# source entrypoint setup
+RUN sed --in-place --expression \
+      '$isource "/root/plansys2_ws/install/setup.bash"' \
+      /ros_entrypoint.sh
+
 CMD /bin/bash
 
 # to build
