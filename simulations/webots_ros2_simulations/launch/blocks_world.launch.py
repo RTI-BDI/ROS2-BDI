@@ -5,6 +5,7 @@ from launch_ros.actions import Node
 from launch import LaunchDescription
 from ament_index_python.packages import get_package_share_directory
 from webots_ros2_driver.webots_launcher import WebotsLauncher
+from webots_ros2_driver.webots_controller import WebotsController
 
 
 def generate_launch_description():
@@ -22,45 +23,29 @@ def generate_launch_description():
         world=os.path.join(package_dir, 'worlds', 'blocksworld.wbt')
     )
 
-    gripper_robot_driver = Node(
-        package='webots_ros2_driver',
-        executable='driver',
-        name='gripper_driver',
-        output='screen',
-        additional_env={'WEBOTS_ROBOT_NAME': 'gripper_a'},
+    gripper_robot_driver = WebotsController( # https://github.com/cyberbotics/webots_ros2/wiki/References-Nodes#webotscontroller
+        robot_name='gripper_a',
         parameters=[
             {'robot_description': gripper_robot_description},
         ]
     )
     
-    carrier_a_robot_driver = Node(
-        package='webots_ros2_driver',
-        executable='driver',
-        name='carrier_a_driver',
-        output='screen',
-        additional_env={'WEBOTS_ROBOT_NAME': 'carrier_a'},
+    carrier_a_robot_driver = WebotsController(
+        robot_name='carrier_a',
         parameters=[
             {'robot_description': carrier_a_robot_description},
         ]
     )
     
-    carrier_b_robot_driver = Node(
-        package='webots_ros2_driver',
-        executable='driver',
-        name='carrier_b_driver',
-        output='screen',
-        additional_env={'WEBOTS_ROBOT_NAME': 'carrier_b'},
+    carrier_b_robot_driver = WebotsController(
+        robot_name='carrier_b',
         parameters=[
             {'robot_description': carrier_b_robot_description},
         ]
     )
     
-    carrier_c_robot_driver = Node(
-        package='webots_ros2_driver',
-        executable='driver',
-        name='carrier_c_driver',
-        output='screen',
-        additional_env={'WEBOTS_ROBOT_NAME': 'carrier_c'},
+    carrier_c_robot_driver = WebotsController(
+        robot_name='carrier_c',
         parameters=[
             {'robot_description': carrier_c_robot_description},
         ]
@@ -68,12 +53,8 @@ def generate_launch_description():
 
     boxes_drivers = []
     for i in range(0, len(boxes)):
-        boxes_drivers.append(Node(
-            package='webots_ros2_driver',
-            executable='driver',
-            name='box_' + boxes[i],
-            output='screen',
-            additional_env={'WEBOTS_ROBOT_NAME': 'box_' + boxes[i]},
+        boxes_drivers.append(WebotsController(
+            robot_name='box_' + boxes[i],
             parameters=[
                 {'robot_description': boxes_descriptions[i]},
             ]
