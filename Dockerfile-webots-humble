@@ -36,22 +36,19 @@ RUN mkdir -p /tmp/webots/root
 
 RUN apt-get update && apt-get install -y \
     libgl1-mesa-glx \
-    libgl1-mesa-dri
-
-RUN apt-get update && apt-get install -y \
-    dbus-x11
-
-# RUN apt-get update && apt-get install -y \
-#     libxcb1 \
-#     libx11-xcb1 \
-#     libxcb-keysyms1 \
-#     libxcb-image0 \
-#     libxcb-shm0 \
-#     libxcb-icccm4 \
-#     libxcb-sync1 \
-#     libxcb-xfixes0 \
-#     libxcb-randr0 \
-#     libxcb-render-util0
+    libgl1-mesa-dri \
+    dbus-x11 \
+    libxcb1 \
+    libx11-xcb1 \
+    libxcb-keysyms1 \
+    libxcb-image0 \
+    libxcb-shm0 \
+    libxcb-icccm4 \
+    libxcb-sync1 \
+    libxcb-xfixes0 \
+    libxcb-randr0 \
+    libxcb-render-util0 \
+    gedit
 
 ENV QT_QPA_PLATFORM_PLUGIN_PATH=/usr/lib/x86_64-linux-gnu/qt5/plugins/platforms
 
@@ -69,7 +66,6 @@ ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 SHELL ["/bin/bash", "-c"]
 
 RUN apt-get update && apt install -y ros-humble-webots-ros2
-# libyaml-cpp0.7
 
 WORKDIR /root
 
@@ -101,4 +97,33 @@ CMD ["/bin/bash"]
 # sudo docker build --platform=linux/amd64 --rm  --tag webots-humble . --file Dockerfile-webots-humble
 
 # to run
-# sudo docker run -v /tmp/.X11-unix/:/tmp/.X11-unix/ --volume="$HOME/.Xauthority:/root/.Xauthority:rw" --env="DISPLAY=host.docker.internal:0" --rm -it webots-humble bash
+
+# 1. Install the NVIDIA Container Toolkit
+# # Add the package repositories
+# distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+# curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+# curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+# # Install the NVIDIA Container Toolkit
+# sudo apt-get update
+# sudo apt-get install -y nvidia-docker2
+# sudo apt-get install -y nvidia-container-toolkit
+#
+# 2. Configure Docker to use the NVIDIA runtime by default.
+# This is done by editing the /etc/docker/daemon.json file.
+# If the file doesn't exist, create it.
+# {
+#     "default-runtime": "nvidia",
+#     "runtimes": {
+#         "nvidia": {
+#             "path": "/usr/bin/nvidia-container-runtime",
+#             "runtimeArgs": []
+#         }
+#     }
+# }
+# 
+# 3. Restart Docker. This applies the changes you made to the daemon.json file.
+# sudo systemctl restart docker
+# 
+# 4. Run
+# xhost +local:
+# sudo docker run --gpus=all -v /tmp/.X11-unix/:/tmp/.X11-unix/ --volume="$HOME/.Xauthority:/root/.Xauthority:rw" -e DISPLAY --rm -it webots-humble bash
