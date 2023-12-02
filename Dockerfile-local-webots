@@ -17,6 +17,8 @@ RUN apt-get update && apt-get install -y \
       ros-${ROS_DISTRO}-demo-nodes-cpp \
       ros-${ROS_DISTRO}-demo-nodes-py
 
+
+
 # install plansys2
 RUN mkdir -p ~/plansys2_ws/src && \
     cd ~/plansys2_ws/src && \
@@ -33,17 +35,6 @@ RUN cd ~/plansys2_ws && \
 RUN sed --in-place --expression \
       '$isource "/root/plansys2_ws/install/setup.bash"' \
       /ros_entrypoint.sh
-
-
-
-
-
-# webots_ros2_driver
-# https://docs.ros.org/en/iron/Tutorials/Advanced/Simulators/Webots/Installation-MacOS.html
-ENV WEBOTS_SHARED_FOLDER /Users/marcorobol/shared:/root/shared
-RUN apt-get update && \
-    apt install -y ros-humble-webots-ros2 iproute2
-
 
 
 
@@ -66,16 +57,55 @@ ENV CMAKE_PREFIX_PATH /usr/lib/cmake:$CMAKE_PREFIX_PATH
 
 
 
+# setup webots_ros2_driver
+ENV WEBOTS_SHARED_FOLDER /Users/marcorobol/shared:/root/shared
+RUN apt install -y iproute2
+
+# install webots_ros2_driver from distributed pagkage
+# https://docs.ros.org/en/iron/Tutorials/Advanced/Simulators/Webots/Installation-MacOS.html
+RUN apt install -y ros-humble-webots-ros2
+
+# install webots_ros2_driver from sources (with fix for mac to connect to host webots_local_server)
+# RUN mkdir -p ~/webots_ros2_driver_ws/src && \
+#     cd ~/webots_ros2_driver_ws/src && \
+#     git clone --recurse-submodules --depth 1 --branch docker https://github.com/marcorobol/webots_ros2.git
+
+# RUN cd ~/webots_ros2_driver_ws && \
+#     rosdep update
+
+# RUN cd ~/webots_ros2_driver_ws && \
+#     NUM_CORES=$(nproc) && \
+#     export MAKEFLAGS="-j$NUM_CORES" && \
+#     export AMENT_BUILD_GRADLE_ARGS="-j$NUM_CORES" && \
+#     export AMENT_BUILD_MAKE_ARGS="-j$NUM_CORES" && \
+#     rosdep install -y -r -q --from-paths src --ignore-src --rosdistro ${ROS_DISTRO}
+
+# RUN cd ~/webots_ros2_driver_ws && \
+#     source /opt/ros/${ROS_DISTRO}/setup.bash && \
+#     NUM_CORES=$(nproc) && \
+#     export MAKEFLAGS="-j$NUM_CORES" && \
+#     export AMENT_BUILD_GRADLE_ARGS="-j$NUM_CORES" && \
+#     export AMENT_BUILD_MAKE_ARGS="-j$NUM_CORES" && \
+#     colcon build --symlink-install
+
+# source entrypoint setup
+RUN sed --in-place --expression \
+      '$isource "/root/plansys2_ws/install/setup.bash"' \
+      /ros_entrypoint.sh
+
+
+
 
 # install ros2bdi 
-# VOLUME ros2bdi_ws/src/ROS2-BDI
-COPY . ros2bdi_ws/src/ROS2-BDI
+# VOLUME /root/ros2bdi_ws/src/ROS2-BDI
+COPY . /root/ros2bdi_ws/src/ROS2-BDI
+COPY build.sh /root/ros2bdi_ws
 
 RUN source /root/plansys2_ws/install/setup.bash && \
     cd ~/ros2bdi_ws && \
     colcon build --packages-select ros2_bdi_interfaces
 
-RUN rm -rf /root/ros2bdi_ws/build/ros2_bdi_interfaces
+# RUN rm -rf /root/ros2bdi_ws/build/ros2_bdi_interfaces
 
 RUN NUM_CORES=$(nproc) && \
     export MAKEFLAGS="-j$NUM_CORES" && \
@@ -91,19 +121,23 @@ RUN NUM_CORES=$(nproc) && \
     export AMENT_BUILD_MAKE_ARGS="-j$NUM_CORES" && \
     source /root/plansys2_ws/install/setup.bash && \
     cd ~/ros2bdi_ws && \
-    colcon build --symlink-install --packages-ignore ros2_bdi_tests && \
-    source /root/ros2bdi_ws/install/setup.bash && \
-    colcon build --packages-select ros2_bdi_tests
-
+    colcon build --symlink-install --packages-ignore ros2_bdi_tests --packages-skip ros2_bdi_interfaces ros2_bdi_utils ros2_bdi_skills ros2_bdi_bringup ros2_bdi_core
+    
 RUN NUM_CORES=$(nproc) && \
     export MAKEFLAGS="-j$NUM_CORES" && \
     export AMENT_BUILD_GRADLE_ARGS="-j$NUM_CORES" && \
     export AMENT_BUILD_MAKE_ARGS="-j$NUM_CORES" && \
-    source /root/plansys2_ws/install/setup.bash && \
+    source /root/ros2bdi_ws/install/setup.bash && \
     cd ~/ros2bdi_ws && \
-    colcon build --symlink-install --packages-select webots_ros2_simulations_interfaces webots_ros2_simulations ros2_bdi_on_webots
+    colcon build --symlink-install --packages-select ros2_bdi_tests
 
-
+# RUN NUM_CORES=$(nproc) && \
+#     export MAKEFLAGS="-j$NUM_CORES" && \
+#     export AMENT_BUILD_GRADLE_ARGS="-j$NUM_CORES" && \
+#     export AMENT_BUILD_MAKE_ARGS="-j$NUM_CORES" && \
+#     source /root/plansys2_ws/install/setup.bash && \
+#     cd ~/ros2bdi_ws && \
+#     colcon build --symlink-install --packages-select webots_ros2_simulations_interfaces webots_ros2_simulations ros2_bdi_on_webots
 
 
 # source entrypoint setup
@@ -111,12 +145,23 @@ RUN sed --in-place --expression \
       '$isource "/root/ros2bdi_ws/install/setup.bash"' \
       /ros_entrypoint.sh
 
-CMD ["/bin/bash", "-c", "source /root/ros2bdi_ws/install/setup.bash && source /opt/ros/humble/setup.bash && source /root/plansys2_ws/install/setup.bash"]
+
+
+
+CMD ["/bin/bash", "-c", \
+    "source /root/ros2bdi_ws/install/setup.bash && source /opt/ros/humble/setup.bash && source /root/plansys2_ws/install/setup.bash"]
 
 
 # to build
 # sudo docker build --platform=linux/amd64 --rm  --tag ros2bdi-local-webots --file Dockerfile-local-webots .
 
 # to run
-# sudo docker run --platform=linux/amd64 -v .:/root/ros2bdi_ws/src/ROS2-BDI -v /Users/marcorobol/shared:/root/shared/ -e "WEBOTS_SHARED_FOLDER=/Users/marcorobol/shared:/root/shared" --rm -it ros2bdi-local-webots ros2 launch webots_ros2_simulations blocks_world.launch.py
-
+# sudo docker run --platform=linux/amd64 -v ros2bdi_ws:/root/ros2bdi_ws/src/ROS2-BDI -v .:/root/ros2bdi_ws/src/ROS2-BDI -v /Users/marcorobol/shared:/root/shared/ -e "WEBOTS_SHARED_FOLDER=/Users/marcorobol/shared:/root/shared" --rm -it ros2bdi-local-webots ros2 launch webots_ros2_simulations blocks_world.launch.py
+#
+# to run ros2 on docker and webots on host:
+# export WEBOTS_HOME=/Applications/Webots.app
+# python3 local_simulation_server.py
+#
+# on mac need also to forward request from docket VM to host machine
+# docker run --rm -d --name=forwarder-container2000 --network=host alpine/socat TCP-LISTEN:2000,fork TCP:host.docker.internal:2000
+# docker run --rm -d --name=forwarder-container1234 --network=host alpine/socat TCP-LISTEN:1234,fork TCP:host.docker.internal:1234
