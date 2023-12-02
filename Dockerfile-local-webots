@@ -156,7 +156,7 @@ CMD ["/bin/bash", "-c", \
 # sudo docker build --platform=linux/amd64 --rm  --tag ros2bdi-local-webots --file Dockerfile-local-webots .
 
 # to run
-# sudo docker run --platform=linux/amd64 -v ros2bdi_ws:/root/ros2bdi_ws/src/ROS2-BDI -v .:/root/ros2bdi_ws/src/ROS2-BDI -v /Users/marcorobol/shared:/root/shared/ -e "WEBOTS_SHARED_FOLDER=/Users/marcorobol/shared:/root/shared" --rm -it ros2bdi-local-webots ros2 launch webots_ros2_simulations blocks_world.launch.py
+# sudo docker run --platform=linux/amd64 -v .:/root/ros2bdi_ws/src/ROS2-BDI -v /Users/marcorobol/shared:/root/shared/ -e "WEBOTS_SHARED_FOLDER=/Users/marcorobol/shared:/root/shared" --rm -it ros2bdi-local-webots ros2 launch webots_ros2_simulations blocks_world.launch.py
 #
 # to run ros2 on docker and webots on host:
 # export WEBOTS_HOME=/Applications/Webots.app
