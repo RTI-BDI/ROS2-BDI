@@ -1,18 +1,102 @@
 version: '1'
 
 services:
-  bdi_cleaner_simple:
-    build: ./
-    command: ros2 launch ros2_bdi_tests bdi_cleaner_simple.launch.py
 
-  belief_set:
-    build: ./
-    command: ros2 topic echo /cleaner/belief_set              # belief set echo
+  # docker run --platform=linux/amd64 -v .:/root/ros2bdi_ws/src/ROS2-BDI -v /Users/marcorobol/shared:/root/shared/ -e "WEBOTS_SHARED_FOLDER=/Users/marcorobol/shared:/root/shared" --rm -it ros2bdi-local-webots ros2 launch webots_ros2_simulations blocks_world.launch.py
+  blocks_world:
+    # build:
+    #     context: .
+    #     dockerfile: Dockerfile-local-webots
+    image: ros2bdi-local-webots
+    command: ros2 launch webots_ros2_simulations blocks_world.launch.py
+    platform: linux/amd64
+    container_name: blocks_world
+    volumes:
+      - .:/root/ros2bdi_ws/src/ROS2-BDI # mount the ROS2-BDI src folder
+      - /Users/marcorobol/shared:/root/shared/ # mount the shared folder to save the Webots world
+      - ./tmp:/tmp # mount the tmp folder to share PlanSys2 generated plans
+    environment:
+      - WEBOTS_SHARED_FOLDER=/Users/marcorobol/shared:/root/shared
+    depends_on:
+      - forwarder-2000
+      - forwarder-1234
 
-  desire_set:
-    build: ./
-    command: ros2 topic echo /cleaner/desire_set              # desire set echo
+  # docker run --platform=linux/amd64 --rm -it ros2bdi-local-webots ros2 launch ros2_bdi_on_webots carrier_a.launch.py
+  carrier_a:
+    # build:
+    #     context: .
+    #     dockerfile: Dockerfile-local-webots
+    image: ros2bdi-local-webots
+    command: ros2 launch ros2_bdi_on_webots carrier_a.launch.py
+    platform: linux/amd64
+    container_name: carrier_a
+    volumes:
+      - .:/root/ros2bdi_ws/src/ROS2-BDI # mount the ROS2-BDI src folder
+      - /Users/marcorobol/shared:/root/shared/ # mount the shared folder to launch Webots locally
+      - ./tmp:/tmp # mount the tmp folder to share PlanSys2 generated plans
+    depends_on:
+      - blocks_world
 
-  plan_execution_info:
-    build: ./
-    command: ros2 topic echo /cleaner/plan_execution_info     # plan execution progress echo
+  # docker run --platform=linux/amd64 --rm -it ros2bdi-local-webots ros2 launch ros2_bdi_on_webots carrier_b.launch.py
+  carrier_b:
+    # build:
+    #     context: .
+    #     dockerfile: Dockerfile-local-webots
+    image: ros2bdi-local-webots
+    command: ros2 launch ros2_bdi_on_webots carrier_b.launch.py
+    platform: linux/amd64
+    container_name: carrier_b
+    volumes:
+      - .:/root/ros2bdi_ws/src/ROS2-BDI # mount the ROS2-BDI src folder
+      - /Users/marcorobol/shared:/root/shared/ # mount the shared folder to launch Webots locally
+      - ./tmp:/tmp # mount the tmp folder to share PlanSys2 generated plans
+    depends_on:
+      - blocks_world
+  
+  # docker run --platform=linux/amd64 --rm -it ros2bdi-local-webots ros2 launch ros2_bdi_on_webots carrier_c.launch.py
+  carrier_c:
+    # build:
+    #     context: .
+    #     dockerfile: Dockerfile-local-webots
+    image: ros2bdi-local-webots
+    command: ros2 launch ros2_bdi_on_webots carrier_c.launch.py
+    platform: linux/amd64
+    container_name: carrier_c
+    volumes:
+      - .:/root/ros2bdi_ws/src/ROS2-BDI # mount the ROS2-BDI src folder
+      - /Users/marcorobol/shared:/root/shared/ # mount the shared folder to launch Webots locally
+      - ./tmp:/tmp # mount the tmp folder to share PlanSys2 generated plans
+    depends_on:
+      - blocks_world
+  
+  # docker run --platform=linux/amd64 --rm -it ros2bdi-local-webots ros2 launch ros2_bdi_on_webots gripper_a.launch.py
+  gripper_a:
+    # build:
+    #     context: .
+    #     dockerfile: Dockerfile-local-webots
+    image: ros2bdi-local-webots
+    command: ros2 launch ros2_bdi_on_webots gripper_a.launch.py
+    platform: linux/amd64
+    container_name: gripper_a
+    volumes:
+      - .:/root/ros2bdi_ws/src/ROS2-BDI # mount the ROS2-BDI src folder
+      - /Users/marcorobol/shared:/root/shared/ # mount the shared folder to launch Webots locally
+      - ./tmp:/tmp # mount the tmp folder to share PlanSys2 generated plans
+    depends_on:
+      - carrier_a
+      - carrier_b
+      - carrier_c
+
+  # docker run --rm -d --name=forwarder-container2000 --network=host alpine/socat TCP-LISTEN:2000,fork TCP:host.docker.internal:2000
+  forwarder-2000:
+    image: alpine/socat
+    command: TCP-LISTEN:2000,fork TCP:host.docker.internal:2000
+    container_name: forwarder-container2000
+    network_mode: host
+
+  # docker run --rm -d --name=forwarder-container1234 --network=host alpine/socat TCP-LISTEN:1234,fork TCP:host.docker.internal:1234
+  forwarder-1234:
+    image: alpine/socat
+    command: TCP-LISTEN:1234,fork TCP:host.docker.internal:1234
+    container_name: forwarder-container1234
+    network_mode: host

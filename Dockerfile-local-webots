@@ -58,7 +58,7 @@ ENV CMAKE_PREFIX_PATH /usr/lib/cmake:$CMAKE_PREFIX_PATH
 
 
 # setup webots_ros2_driver
-ENV WEBOTS_SHARED_FOLDER /Users/marcorobol/shared:/root/shared
+# To run webots on local host need to set ENV WEBOTS_SHARED_FOLDER ~/shared:/root/shared and mount shared folder
 RUN apt install -y iproute2
 
 # install webots_ros2_driver from distributed pagkage
@@ -152,20 +152,28 @@ CMD ["/bin/bash", "-c", \
     "source /root/ros2bdi_ws/install/setup.bash && source /opt/ros/humble/setup.bash && source /root/plansys2_ws/install/setup.bash"]
 
 
-# to build
+# build
 # sudo docker build --platform=linux/amd64 --rm  --tag ros2bdi-local-webots --file Dockerfile-local-webots .
 
-# to run
-# docker run --platform=linux/amd64 -v .:/root/ros2bdi_ws/src/ROS2-BDI -v /Users/marcorobol/shared:/root/shared/ -e "WEBOTS_SHARED_FOLDER=/Users/marcorobol/shared:/root/shared" --rm -it ros2bdi-local-webots ros2 launch webots_ros2_simulations blocks_world.launch.py
-# docker run --platform=linux/amd64 -v .:/root/ros2bdi_ws/src/ROS2-BDI --rm -it ros2bdi-local-webots ros2 launch ros2_bdi_on_webots carrier_a.launch.py
-# docker run --platform=linux/amd64 -v .:/root/ros2bdi_ws/src/ROS2-BDI --rm -it ros2bdi-local-webots ros2 launch ros2_bdi_on_webots carrier_b.launch.py
-# docker run --platform=linux/amd64 -v .:/root/ros2bdi_ws/src/ROS2-BDI --rm -it ros2bdi-local-webots ros2 launch ros2_bdi_on_webots carrier_c.launch.py
-# docker run --platform=linux/amd64 -v .:/root/ros2bdi_ws/src/ROS2-BDI --rm -it ros2bdi-local-webots ros2 launch ros2_bdi_on_webots gripper_a.launch.py
+# run world
+# docker run --platform=linux/amd64 -v ./tmp:/tmp -v .:/root/ros2bdi_ws/src/ROS2-BDI -v ~/shared:/root/shared/ -e "WEBOTS_SHARED_FOLDER=~/shared:/root/shared" --rm -it --name ros2bdi ros2bdi-local-webots ros2 launch webots_ros2_simulations blocks_world.launch.py
+# 
+# and then agents
+# docker run --platform=linux/amd64 -v ./tmp:/tmp --rm -it ros2bdi-local-webots ros2 launch ros2_bdi_on_webots carrier_a.launch.py
+# docker run --platform=linux/amd64 -v ./tmp:/tmp --rm -it ros2bdi-local-webots ros2 launch ros2_bdi_on_webots carrier_b.launch.py
+# docker run --platform=linux/amd64 -v ./tmp:/tmp --rm -it ros2bdi-local-webots ros2 launch ros2_bdi_on_webots carrier_c.launch.py
+# docker run --platform=linux/amd64 -v ./tmp:/tmp --rm -it ros2bdi-local-webots ros2 launch ros2_bdi_on_webots gripper_a.launch.py
 #
-# to run ros2 on docker and webots on host:
+# or run agents in the same container of world
+# docker exec -it ros2bdi bash -c "source /root/ros2bdi_ws/install/setup.bash && ros2 launch ros2_bdi_on_webots carrier_b.launch.py"
+# docker exec -it ros2bdi bash -c "source /root/ros2bdi_ws/install/setup.bash && ros2 launch ros2_bdi_on_webots carrier_c.launch.py"
+# docker exec -it ros2bdi bash -c "source /root/ros2bdi_ws/install/setup.bash && ros2 launch ros2_bdi_on_webots carrier_a.launch.py" 
+# docker exec -it ros2bdi bash -c "source /root/ros2bdi_ws/install/setup.bash && ros2 launch ros2_bdi_on_webots gripper_a.launch.py"
+# 
+# First of all, to use webots on host machine (while ros2bdi on docker):
 # export WEBOTS_HOME=/Applications/Webots.app
 # python3 local_simulation_server.py
 #
-# on mac need also to forward request from docket VM to host machine
+# On mac, because of network of docker virtual machine, need also to forward request from docker VM to host machine
 # docker run --rm -d --name=forwarder-container2000 --network=host alpine/socat TCP-LISTEN:2000,fork TCP:host.docker.internal:2000
 # docker run --rm -d --name=forwarder-container1234 --network=host alpine/socat TCP-LISTEN:1234,fork TCP:host.docker.internal:1234

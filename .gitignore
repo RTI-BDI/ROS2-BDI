@@ -57,3 +57,5 @@ CATKIN_IGNORE
 .vscode/
 
 log_dependencies.txt
+
+tmp/
