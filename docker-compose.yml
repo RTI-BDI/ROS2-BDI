@@ -2,7 +2,7 @@ version: '1'
 
 services:
 
-  # docker run --platform=linux/amd64 -v .:/root/ros2bdi_ws/src/ROS2-BDI -v /Users/marcorobol/shared:/root/shared/ -e "WEBOTS_SHARED_FOLDER=/Users/marcorobol/shared:/root/shared" --rm -it ros2bdi-local-webots ros2 launch webots_ros2_simulations blocks_world.launch.py
+  # docker run --platform=linux/amd64 -v .:/root/ros2bdi_ws/src/ROS2-BDI -v ~/shared:/root/shared/ -e "WEBOTS_SHARED_FOLDER=~/shared:/root/shared" --rm -it ros2bdi-local-webots ros2 launch webots_ros2_simulations blocks_world.launch.py
   blocks_world:
     # build:
     #     context: .
@@ -13,10 +13,10 @@ services:
     container_name: blocks_world
     volumes:
       - .:/root/ros2bdi_ws/src/ROS2-BDI # mount the ROS2-BDI src folder
-      - /Users/marcorobol/shared:/root/shared/ # mount the shared folder to save the Webots world
-      - ./tmp:/tmp # mount the tmp folder to share PlanSys2 generated plans
+      - ./tmp/shared:/root/shared/ # mount the shared folder to save the Webots world
+      # - ./tmp:/tmp # mount the tmp folder to share PlanSys2 generated plans
     environment:
-      - WEBOTS_SHARED_FOLDER=/Users/marcorobol/shared:/root/shared
+      - WEBOTS_SHARED_FOLDER=./tmp/shared:/root/shared
     depends_on:
       - forwarder-2000
       - forwarder-1234
@@ -32,7 +32,6 @@ services:
     container_name: carrier_a
     volumes:
       - .:/root/ros2bdi_ws/src/ROS2-BDI # mount the ROS2-BDI src folder
-      - /Users/marcorobol/shared:/root/shared/ # mount the shared folder to launch Webots locally
       - ./tmp:/tmp # mount the tmp folder to share PlanSys2 generated plans
     depends_on:
       - blocks_world
@@ -48,7 +47,6 @@ services:
     container_name: carrier_b
     volumes:
       - .:/root/ros2bdi_ws/src/ROS2-BDI # mount the ROS2-BDI src folder
-      - /Users/marcorobol/shared:/root/shared/ # mount the shared folder to launch Webots locally
       - ./tmp:/tmp # mount the tmp folder to share PlanSys2 generated plans
     depends_on:
       - blocks_world
@@ -64,7 +62,6 @@ services:
     container_name: carrier_c
     volumes:
       - .:/root/ros2bdi_ws/src/ROS2-BDI # mount the ROS2-BDI src folder
-      - /Users/marcorobol/shared:/root/shared/ # mount the shared folder to launch Webots locally
       - ./tmp:/tmp # mount the tmp folder to share PlanSys2 generated plans
     depends_on:
       - blocks_world
@@ -80,7 +77,6 @@ services:
     container_name: gripper_a
     volumes:
       - .:/root/ros2bdi_ws/src/ROS2-BDI # mount the ROS2-BDI src folder
-      - /Users/marcorobol/shared:/root/shared/ # mount the shared folder to launch Webots locally
       - ./tmp:/tmp # mount the tmp folder to share PlanSys2 generated plans
     depends_on:
       - carrier_a
