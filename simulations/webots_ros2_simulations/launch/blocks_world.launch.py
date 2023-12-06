@@ -10,14 +10,14 @@ from webots_ros2_driver.webots_controller import WebotsController
 
 def generate_launch_description():
     package_dir = get_package_share_directory('webots_ros2_simulations')
-    carrier_a_robot_description = pathlib.Path(os.path.join(package_dir, 'resource', 'carrier_a_robot.urdf')).read_text()
-    carrier_b_robot_description = pathlib.Path(os.path.join(package_dir, 'resource', 'carrier_b_robot.urdf')).read_text()
-    carrier_c_robot_description = pathlib.Path(os.path.join(package_dir, 'resource', 'carrier_c_robot.urdf')).read_text()
-    gripper_robot_description = pathlib.Path(os.path.join(package_dir, 'resource', 'gripper_a_robot.urdf')).read_text()
+    carrier_a_robot_description = os.path.join(package_dir, 'resource', 'carrier_a_robot.urdf')
+    carrier_b_robot_description = os.path.join(package_dir, 'resource', 'carrier_b_robot.urdf')
+    carrier_c_robot_description = os.path.join(package_dir, 'resource', 'carrier_c_robot.urdf')
+    gripper_robot_description = os.path.join(package_dir, 'resource', 'gripper_a_robot.urdf')
     boxes = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']
     boxes_descriptions = []
     for box in boxes:
-        boxes_descriptions.append(pathlib.Path(os.path.join(package_dir, 'resource', 'box_' + box + '.urdf')).read_text())
+        boxes_descriptions.append(os.path.join(package_dir, 'resource', 'box_' + box + '.urdf'))
     
     webots = WebotsLauncher(
         world=os.path.join(package_dir, 'worlds', 'blocksworld.wbt')
