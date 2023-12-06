@@ -13,10 +13,12 @@ services:
     container_name: blocks_world
     volumes:
       - .:/root/ros2bdi_ws/src/ROS2-BDI # mount the ROS2-BDI src folder
-      - ./tmp/shared:/root/shared/ # mount the shared folder to save the Webots world
-      # - ./tmp:/tmp # mount the tmp folder to share PlanSys2 generated plans
+      - /Users/Shared/shared:/root/shared/ # mount the shared folder to save the Webots world
+      - ./tmp:/tmp # mount the tmp folder to share PlanSys2 generated plans
     environment:
-      - WEBOTS_SHARED_FOLDER=./tmp/shared:/root/shared
+      - WEBOTS_SHARED_FOLDER=/Users/Shared/shared:/root/shared
+      - RCUTILS_LOGGING_USE_STDOUT:1
+      - RCUTILS_LOGGING_BUFFERED_STREAM:0
     depends_on:
       - forwarder-2000
       - forwarder-1234
@@ -33,6 +35,9 @@ services:
     volumes:
       - .:/root/ros2bdi_ws/src/ROS2-BDI # mount the ROS2-BDI src folder
       - ./tmp:/tmp # mount the tmp folder to share PlanSys2 generated plans
+    environment:
+      - RCUTILS_LOGGING_USE_STDOUT:1
+      - RCUTILS_LOGGING_BUFFERED_STREAM:0
     depends_on:
       - blocks_world
 
@@ -48,6 +53,9 @@ services:
     volumes:
       - .:/root/ros2bdi_ws/src/ROS2-BDI # mount the ROS2-BDI src folder
       - ./tmp:/tmp # mount the tmp folder to share PlanSys2 generated plans
+    environment:
+      - RCUTILS_LOGGING_USE_STDOUT:1
+      - RCUTILS_LOGGING_BUFFERED_STREAM:0
     depends_on:
       - blocks_world
   
@@ -63,6 +71,9 @@ services:
     volumes:
       - .:/root/ros2bdi_ws/src/ROS2-BDI # mount the ROS2-BDI src folder
       - ./tmp:/tmp # mount the tmp folder to share PlanSys2 generated plans
+    environment:
+      - RCUTILS_LOGGING_USE_STDOUT:1
+      - RCUTILS_LOGGING_BUFFERED_STREAM:0
     depends_on:
       - blocks_world
   
@@ -78,6 +89,9 @@ services:
     volumes:
       - .:/root/ros2bdi_ws/src/ROS2-BDI # mount the ROS2-BDI src folder
       - ./tmp:/tmp # mount the tmp folder to share PlanSys2 generated plans
+    environment:
+      - RCUTILS_LOGGING_USE_STDOUT:1
+      - RCUTILS_LOGGING_BUFFERED_STREAM:0
     depends_on:
       - carrier_a
       - carrier_b
@@ -96,3 +110,5 @@ services:
     command: TCP-LISTEN:1234,fork TCP:host.docker.internal:1234
     container_name: forwarder-container1234
     network_mode: host
+
+

@@ -90,7 +90,7 @@ RUN apt install -y ros-humble-webots-ros2
 
 # source entrypoint setup
 RUN sed --in-place --expression \
-      '$isource "/root/plansys2_ws/install/setup.bash"' \
+      '$isource "/root/webots_ros2_driver_ws/install/setup.bash"' \
       /ros_entrypoint.sh
 
 
@@ -139,6 +139,8 @@ RUN NUM_CORES=$(nproc) && \
 #     cd ~/ros2bdi_ws && \
 #     colcon build --symlink-install --packages-select webots_ros2_simulations_interfaces webots_ros2_simulations ros2_bdi_on_webots
 
+ENV RCUTILS_LOGGING_USE_STDOUT 1
+ENV RCUTILS_LOGGING_BUFFERED_STREAM 0
 
 # source entrypoint setup
 RUN sed --in-place --expression \
@@ -156,7 +158,7 @@ CMD ["/bin/bash", "-c", \
 # sudo docker build --platform=linux/amd64 --rm  --tag ros2bdi-local-webots --file Dockerfile-local-webots .
 
 # run world
-# docker run --platform=linux/amd64 -v ./tmp:/tmp -v .:/root/ros2bdi_ws/src/ROS2-BDI -v ~/shared:/root/shared/ -e "WEBOTS_SHARED_FOLDER=~/shared:/root/shared" --rm -it --name ros2bdi ros2bdi-local-webots ros2 launch webots_ros2_simulations blocks_world.launch.py
+# docker run --platform=linux/amd64 -v .:/root/ros2bdi_ws/src/ROS2-BDI -v /Users/Shared/shared:/root/shared -e "WEBOTS_SHARED_FOLDER=/Users/Shared/shared:/root/shared" --rm -it --name ros2bdi ros2bdi-local-webots ros2 launch webots_ros2_simulations blocks_world.launch.py
 # 
 # and then agents
 # docker run --platform=linux/amd64 -v ./tmp:/tmp --rm -it ros2bdi-local-webots ros2 launch ros2_bdi_on_webots carrier_a.launch.py
@@ -165,13 +167,25 @@ CMD ["/bin/bash", "-c", \
 # docker run --platform=linux/amd64 -v ./tmp:/tmp --rm -it ros2bdi-local-webots ros2 launch ros2_bdi_on_webots gripper_a.launch.py
 #
 # or run agents in the same container of world
+# docker exec -it ros2bdi bash -c "source /root/ros2bdi_ws/install/setup.bash && ros2 launch ros2_bdi_on_webots carrier_a.launch.py"
 # docker exec -it ros2bdi bash -c "source /root/ros2bdi_ws/install/setup.bash && ros2 launch ros2_bdi_on_webots carrier_b.launch.py"
-# docker exec -it ros2bdi bash -c "source /root/ros2bdi_ws/install/setup.bash && ros2 launch ros2_bdi_on_webots carrier_c.launch.py"
-# docker exec -it ros2bdi bash -c "source /root/ros2bdi_ws/install/setup.bash && ros2 launch ros2_bdi_on_webots carrier_a.launch.py" 
+# docker exec -it ros2bdi bash -c "source /root/ros2bdi_ws/install/setup.bash && ros2 launch ros2_bdi_on_webots carrier_c.launch.py" 
 # docker exec -it ros2bdi bash -c "source /root/ros2bdi_ws/install/setup.bash && ros2 launch ros2_bdi_on_webots gripper_a.launch.py"
+# 
+# or run everything at once
+# docker run --platform=linux/amd64 -v .:/root/ros2bdi_ws/src/ROS2-BDI -v /Users/Shared/shared:/root/shared -e "WEBOTS_SHARED_FOLDER=/Users/Shared/shared:/root/shared" --rm -it --name ros2bdi ros2bdi-local-webots \
+# bash -c "\
+# source /root/ros2bdi_ws/install/setup.bash & sleep 5 && \
+# ros2 launch webots_ros2_simulations blocks_world.launch.py & sleep 5 && \
+# ros2 launch ros2_bdi_on_webots carrier_a.launch.py & sleep 5 && \
+# ros2 launch ros2_bdi_on_webots carrier_b.launch.py & sleep 5 && \
+# ros2 launch ros2_bdi_on_webots carrier_c.launch.py & sleep 5 && \
+# ros2 launch ros2_bdi_on_webots gripper_a.launch.py \
+# " 
 # 
 # First of all, to use webots on host machine (while ros2bdi on docker):
 # export WEBOTS_HOME=/Applications/Webots.app
+# export WEBOTS_HOME_PATH=$WEBOTS_HOME/Contents # Not sure about this!
 # python3 local_simulation_server.py
 #
 # On mac, because of network of docker virtual machine, need also to forward request from docker VM to host machine
