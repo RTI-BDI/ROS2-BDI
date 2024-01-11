@@ -12,8 +12,8 @@ WorldInfo {
   ]
   title "Blocksworld - basicTimeStep 100"
   CFM 0.0001
-  ERP 0.2
-  basicTimeStep 10
+  ERP 0.6
+  basicTimeStep 2
   FPS 10
   physicsDisableTime 0
   lineScale 0.5
