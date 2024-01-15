@@ -454,9 +454,6 @@ DEF BOX_A1 Robot{
         }
       ]
       name "s_box_a1"
-      boundingObject USE BOX_SHAPE
-      physics Physics {
-      }
     }
   ]
   physics Physics {
@@ -489,9 +486,6 @@ DEF BOX_A2 Robot{
           }
         ]
         name "s_box_a2"
-        boundingObject USE BOX_SHAPE
-        physics Physics {
-        }
     }
   ]
   physics Physics {
@@ -524,9 +518,6 @@ DEF BOX_B1 Robot{
         }
       ]
       name "s_box_b1"
-      boundingObject USE BOX_SHAPE
-      physics Physics {
-      }
     }
   ]
   physics Physics {
@@ -559,9 +550,6 @@ DEF BOX_B2 Robot{
         }
       ]
       name "s_box_b2"
-      boundingObject USE BOX_SHAPE
-      physics Physics {
-      }
     }
   ]
   physics Physics {
@@ -594,9 +582,6 @@ DEF BOX_C1 Robot{
         }
       ]
       name "s_box_c1"
-      boundingObject USE BOX_SHAPE
-      physics Physics {
-      }
     }
   ]
   physics Physics {
@@ -629,9 +614,6 @@ DEF BOX_C2 Robot{
         }
       ]
       name "s_box_c2"
-      boundingObject USE BOX_SHAPE
-      physics Physics {
-      }
     }
   ]
   physics Physics {
