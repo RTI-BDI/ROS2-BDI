@@ -75,7 +75,7 @@ bool TriggerPlanClient::makePlanExecutionRequest(const BDIPlanExecution::Request
     }
     catch(const rclcpp::exceptions::RCLError& rclerr)
     {
-        RCLCPP_ERROR(caller_node_->get_logger(), rclerr.what());
+        RCLCPP_ERROR(caller_node_->get_logger(), rclerr.what() );
     }
     catch(const std::exception &e)
     {

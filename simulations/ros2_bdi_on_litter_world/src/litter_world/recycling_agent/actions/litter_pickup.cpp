@@ -129,7 +129,7 @@ class LitterPickup : public BDIActionExecutor
         void sendLitterRemoveGoal(Pose litterPosition)
         {
             if (!this->client_cmd_pose_ptr_->wait_for_action_server(std::chrono::seconds(LWACTIONS_WAIT_TIMEOUT))) {
-                RCLCPP_ERROR(this->get_logger(), "Action server " + litter_remove_action_name_ + " not available after waiting");
+                RCLCPP_ERROR(this->get_logger(), ("Action server " + litter_remove_action_name_ + " not available after waiting").c_str());
                 rclcpp::shutdown();
                 return;
             }
@@ -187,7 +187,7 @@ class LitterPickup : public BDIActionExecutor
         void sendLitterLoadGoal(string litter, Pose litterPosition)
         {
             if (!this->client_cmd_load_ptr_->wait_for_action_server(std::chrono::seconds(LWACTIONS_WAIT_TIMEOUT))) {
-                RCLCPP_ERROR(this->get_logger(), "Action server " + litter_load_action_name_ + " not available after waiting");
+                RCLCPP_ERROR(this->get_logger(), ("Action server " + litter_load_action_name_ + " not available after waiting").c_str());
                 rclcpp::shutdown();
                 return;
             }

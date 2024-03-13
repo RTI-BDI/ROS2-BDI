@@ -3,6 +3,7 @@ project(ros2_bdi_utils)
 
 # Default to C++17
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # find dependencies
 find_package(ament_cmake REQUIRED) 

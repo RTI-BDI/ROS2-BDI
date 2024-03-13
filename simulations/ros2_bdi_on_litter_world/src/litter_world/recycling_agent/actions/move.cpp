@@ -100,7 +100,7 @@ class Move : public BDIActionExecutor
         void sendGoal(Pose currentCell, Pose goalCell)
         {
             if (!this->client_cmd_pose_ptr_->wait_for_action_server(std::chrono::seconds(LWACTIONS_WAIT_TIMEOUT))) {
-                RCLCPP_ERROR(this->get_logger(), "Action server " + action_name_ + " not available after waiting");
+                RCLCPP_ERROR(this->get_logger(), ("Action server " + action_name_ + " not available after waiting").c_str());
                 rclcpp::shutdown();
                 return;
             }

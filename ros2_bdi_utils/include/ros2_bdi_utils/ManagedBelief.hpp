@@ -5,6 +5,7 @@
 #include <vector>
 #include <map>
 #include <iostream>
+#include <optional>
 
 #include "ros2_bdi_interfaces/msg/belief.hpp"
 

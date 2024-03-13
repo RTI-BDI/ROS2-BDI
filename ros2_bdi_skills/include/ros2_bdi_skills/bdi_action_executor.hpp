@@ -140,7 +140,7 @@ protected:
       communicateExecStatus(javaff_interfaces::msg::ActionExecutionStatus().SUCCESS);
 
       if(this->get_parameter(PARAM_DEBUG).as_bool())
-        RCLCPP_INFO(this->get_logger(), "Action execution success: " + success_log);
+        RCLCPP_INFO(this->get_logger(), ("Action execution success: " + success_log).c_str());
       finish(true, 1.0, action_name_ + " successful execution" + ((success_log == "")? ": action performed" : ": " + success_log));
     }
 
@@ -155,7 +155,7 @@ protected:
     {
       communicateExecStatus(javaff_interfaces::msg::ActionExecutionStatus().FAILURE);
       if(this->get_parameter(PARAM_DEBUG).as_bool())
-        RCLCPP_ERROR(this->get_logger(), "Action execution failed: " + err_log);
+        RCLCPP_ERROR(this->get_logger(), ("Action execution failed: " + err_log).c_str());
       finish(false, progress_, action_name_ + " failed execution" + ((err_log == "")? ": generic error" : ": " + err_log));
     }
 

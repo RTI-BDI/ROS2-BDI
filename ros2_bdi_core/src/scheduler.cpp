@@ -333,16 +333,16 @@ void Scheduler::tryInitDesireSet()
             if(initMGDesire.getValue().size() > 0)
                     addDesire(initMGDesire);
         if(this->get_parameter(PARAM_DEBUG).as_bool())
-            RCLCPP_INFO(this->get_logger(), "Desire set initialization performed through " + init_dset_filepath);
+            RCLCPP_INFO(this->get_logger(), ("Desire set initialization performed through " + init_dset_filepath).c_str());
     
     }catch(const YAML::BadFile& bfile){
-        RCLCPP_ERROR(this->get_logger(), "Bad File: Desire set initialization failed because init. file " + init_dset_filepath + " hasn't been found");
+        RCLCPP_ERROR(this->get_logger(), ("Bad File: Desire set initialization failed because init. file " + init_dset_filepath + " hasn't been found").c_str());
     }catch(const YAML::ParserException& bpars){
-        RCLCPP_ERROR(this->get_logger(), "YAML Parser Exception: Desire set initialization failed because init. file " + init_dset_filepath + " doesn't present a valid YAML format");
+        RCLCPP_ERROR(this->get_logger(), ("YAML Parser Exception: Desire set initialization failed because init. file " + init_dset_filepath + " doesn't present a valid YAML format").c_str());
     }catch(const YAML::BadConversion& bconvfile){
-        RCLCPP_ERROR(this->get_logger(), "Bad Conversion: Desire set initialization failed because init. file " + init_dset_filepath + " doesn't present a valid desire array");
+        RCLCPP_ERROR(this->get_logger(), ("Bad Conversion: Desire set initialization failed because init. file " + init_dset_filepath + " doesn't present a valid desire array").c_str());
     }catch(const YAML::InvalidNode& invalid_node){
-        RCLCPP_ERROR(this->get_logger(), "Invalid Node: Desire set initialization failed because init. file " + init_dset_filepath + " doesn't present a valid desire array");
+        RCLCPP_ERROR(this->get_logger(), ("Invalid Node: Desire set initialization failed because init. file " + init_dset_filepath + " doesn't present a valid desire array").c_str());
     }   
 }
 
@@ -446,8 +446,8 @@ bool Scheduler::launchPlanExecution(const BDIManaged::ManagedPlan& selectedPlan)
         string desireValue = "";
         for(auto mbVal : selectedPlan.getFinalTarget().getValue())
             desireValue += "(" + mbVal.getName() + " "+mbVal.getParamsJoined()+")";
-        if(triggered) RCLCPP_INFO(this->get_logger(), "Triggered new plan execution fulfilling desire \"" + current_plan_.getPlanTarget().getName() + "\": " + desireValue + " success");
-        else RCLCPP_INFO(this->get_logger(), "Triggered new plan execution fulfilling desire \"" + selectedPlan.getPlanTarget().getName() + "\": " + desireValue + " failed");
+        if(triggered) RCLCPP_INFO(this->get_logger(), ("Triggered new plan execution fulfilling desire \"" + current_plan_.getPlanTarget().getName() + "\": " + desireValue + " success").c_str());
+        else RCLCPP_INFO(this->get_logger(), ("Triggered new plan execution fulfilling desire \"" + selectedPlan.getPlanTarget().getName() + "\": " + desireValue + " failed").c_str());
     }
 
     return triggered;
@@ -463,14 +463,14 @@ bool Scheduler::abortCurrentPlanExecution()
     if(aborted)
     {
         if(this->get_parameter(PARAM_DEBUG).as_bool())
-            RCLCPP_INFO(this->get_logger(), "Aborted plan execution fulfilling desire \"%s\"", current_plan_.getFinalTarget().getName());
+            RCLCPP_INFO(this->get_logger(), "Aborted plan execution fulfilling desire \"%s\"", current_plan_.getFinalTarget().getName().c_str());
         
         publishTargetGoalInfo(DEL_GOAL_BELIEFS);//goal disactivated -> upd belief set
         current_plan_ = BDIManaged::ManagedPlan{}; //no plan in execution
         fulfilling_desire_ = ManagedDesire{};
     }
     else if(this->get_parameter(PARAM_DEBUG).as_bool())
-        RCLCPP_INFO(this->get_logger(), "The request to abort plan execution fulfilling desire \"%s\" has not been fulfilled", current_plan_.getFinalTarget().getName());
+        RCLCPP_INFO(this->get_logger(), "The request to abort plan execution fulfilling desire \"%s\" has not been fulfilled", current_plan_.getFinalTarget().getName().c_str());
     return aborted;
 }
 
@@ -494,8 +494,8 @@ bool Scheduler::tryTriggerPlanExecution(const ManagedPlan& selectedPlan)
     {
         //before triggering new plan, abort the one currently in exec
         if(this->get_parameter(PARAM_DEBUG).as_bool())
-                RCLCPP_INFO(this->get_logger(), "Ready to abort plan for desire \"" + current_plan_.getPlanTarget().getName() + "\"" + 
-                            " in order to trigger plan execution for desire \"" + selectedPlan.getPlanTarget().getName() + "\"");
+                RCLCPP_INFO(this->get_logger(), ("Ready to abort plan for desire \"" + current_plan_.getPlanTarget().getName() + "\"" + 
+                            " in order to trigger plan execution for desire \"" + selectedPlan.getPlanTarget().getName() + "\"").c_str());
             
         //trigger plan abortion
         if(!abortCurrentPlanExecution())

@@ -125,7 +125,7 @@ void Sensor::initSensing(const string& sensor_name)
             seconds(init_sleep_sec),
             bind(&Sensor::startSensing, this));
 
-    RCLCPP_INFO(this->get_logger(), "Sensor node \"" + this->get_parameter(PARAM_SENSOR_NAME).as_string() + "\" initialized");
+    RCLCPP_INFO(this->get_logger(), ("Sensor node \"" + this->get_parameter(PARAM_SENSOR_NAME).as_string() + "\" initialized").c_str());
 }
 
 /*
@@ -215,7 +215,7 @@ void Sensor::publishSensing(const UpdOperation& op)
             paramsJoined += p + ", ";
         string stringBelief = "name = " + last_sensed_.name + ", params = " + paramsJoined + 
             ((last_sensed_.pddl_type == last_sensed_.FUNCTION_TYPE)? " value = " + std::to_string(last_sensed_.value) : "");
-        RCLCPP_INFO(this->get_logger(), "Operation = " + stringOp + " , belief " + stringBelief);
+        RCLCPP_INFO(this->get_logger(), ("Operation = " + stringOp + " , belief " + stringBelief).c_str());
     }
 }
 

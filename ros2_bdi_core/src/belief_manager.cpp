@@ -254,16 +254,16 @@ void BeliefManager::tryInitBeliefSet()
         for(ManagedBelief initMGBelief : init_mgbeliefs)
             addBeliefSyncPDDL(initMGBelief);
         if(this->get_parameter(PARAM_DEBUG).as_bool())
-            RCLCPP_INFO(this->get_logger(), "Belief set initialization performed through " + init_bset_filepath);
+            RCLCPP_INFO(this->get_logger(), ("Belief set initialization performed through " + init_bset_filepath).c_str() );
     
     }catch(const YAML::BadFile& bfile){
-        RCLCPP_ERROR(this->get_logger(), "Bad File: Belief set initialization failed because init. file " + init_bset_filepath + " hasn't been found");
+        RCLCPP_ERROR(this->get_logger(), ("Bad File: Belief set initialization failed because init. file " + init_bset_filepath + " hasn't been found").c_str() );
     }catch(const YAML::ParserException& bpars){
-        RCLCPP_ERROR(this->get_logger(), "YAML Parser Exception: Belief set initialization failed because init. file " + init_bset_filepath + " doesn't present a valid YAML format");
+        RCLCPP_ERROR(this->get_logger(), ("YAML Parser Exception: Belief set initialization failed because init. file " + init_bset_filepath + " doesn't present a valid YAML format").c_str() );
     }catch(const YAML::BadConversion& bconvfile){
-        RCLCPP_ERROR(this->get_logger(), "Bad Conversion: Belief set initialization failed because init. file " + init_bset_filepath + " doesn't present a valid belief array");
+        RCLCPP_ERROR(this->get_logger(), ("Bad Conversion: Belief set initialization failed because init. file " + init_bset_filepath + " doesn't present a valid belief array").c_str() );
     }catch(const YAML::InvalidNode& invalid_node){
-        RCLCPP_ERROR(this->get_logger(), "Invalid Node: Belief set initialization failed because init. file " + init_bset_filepath + " doesn't present a valid belief array");
+        RCLCPP_ERROR(this->get_logger(), ("Invalid Node: Belief set initialization failed because init. file " + init_bset_filepath + " doesn't present a valid belief array").c_str() );
     }
 }
 
@@ -295,7 +295,7 @@ void BeliefManager::updatedPDDLProblem(const Empty::SharedPtr msg)
         }
         */
         RCLCPP_INFO(this->get_logger(), "Update pddl problem notification:\n");
-        RCLCPP_INFO(this->get_logger(), out);
+        RCLCPP_INFO(this->get_logger(), out.c_str() );
     }
 
     vector<Belief> instances = PDDLBDIConverter::convertPDDLInstances(problem_expert_->getInstances());
@@ -312,7 +312,7 @@ bool BeliefManager::updateBeliefSet(const vector<Belief>& ins_beliefs, const vec
 {
     bool notify;//if anything changes, put it to true
     if(this->get_parameter(PARAM_DEBUG).as_bool())
-        RCLCPP_INFO(this->get_logger(), "update problem: verify if needed to sync (b_set %d, prob_ins %d, prob_pred %d, prob_fun %d)", 
+        RCLCPP_INFO(this->get_logger(), "update problem: verify if needed to sync (b_set %ld, prob_ins %ld, prob_pred %ld, prob_fun %ld)", 
             belief_set_.size(), ins_beliefs.size(), pred_beliefs.size(), fun_beliefs.size());
 
     mtx_sync.lock();
@@ -349,10 +349,10 @@ bool BeliefManager::addOrModifyBeliefs(const vector<Belief>& beliefs, const bool
         
         if(count_bs == 0)//not found
         {
-            RCLCPP_INFO(this->get_logger(), "Adding missing belief ("+mb.pddlTypeString()+"): " + 
+            RCLCPP_INFO(this->get_logger(), ("Adding missing belief ("+mb.pddlTypeString()+"): " + 
                 mb.getName() + " " + ((mb.pddlType() == Belief().INSTANCE_TYPE)? mb.type().name : mb.getParamsJoined()) +
                 ((mb.pddlType() == Belief().FUNCTION_TYPE)?
-                    " (value = " + std::to_string(mb.getValue()) +")" : "")
+                    " (value = " + std::to_string(mb.getValue()) +")" : "")).c_str()
                 );
             
             addBelief(bel);
@@ -576,7 +576,7 @@ bool BeliefManager::tryAddMissingInstances(const ManagedBelief& mb)
         string missing_pos_string = "";
         for(bool mp : missing_pos)
             missing_pos_string += std::to_string((int)mp) + ", ";
-        RCLCPP_INFO(this->get_logger(), "Missing: " + missing_pos_string);
+        RCLCPP_INFO(this->get_logger(), ("Missing: " + missing_pos_string).c_str() );
     }
     
     
@@ -593,7 +593,7 @@ bool BeliefManager::tryAddMissingInstances(const ManagedBelief& mb)
                     ManagedBelief mb_ins = ManagedBelief::buildMBInstance(mb.getParams()[i].name, mp_type);
                     
                     if(this->get_parameter(PARAM_DEBUG).as_bool())
-                        RCLCPP_INFO(this->get_logger(), "Trying to add instance: " + mb_ins.getName() + " - " + mb_ins.type().name);
+                        RCLCPP_INFO(this->get_logger(), ("Trying to add instance: " + mb_ins.getName() + " - " + mb_ins.type().name).c_str() );
                     
                     if(problem_expert_->addInstance(BDIPDDLConverter::buildInstance(mb_ins)))//add instance (type found from domain expert)
                         addBelief(mb_ins);
@@ -619,7 +619,7 @@ bool BeliefManager::tryAddMissingInstances(const ManagedBelief& mb)
                     ManagedBelief mb_ins = ManagedBelief::buildMBInstance(mb.getParams()[i].name, mp_type);
                     
                     if(this->get_parameter(PARAM_DEBUG).as_bool())
-                        RCLCPP_INFO(this->get_logger(), "Trying to add instance: " + mb_ins.getName() + " - " + mb_ins.type().name);
+                        RCLCPP_INFO(this->get_logger(), ("Trying to add instance: " + mb_ins.getName() + " - " + mb_ins.type().name).c_str() );
                     
                     if(problem_expert_->addInstance(BDIPDDLConverter::buildInstance(mb_ins)))//add instance (type found from domain expert)
                         addBelief(mb_ins);
@@ -695,10 +695,10 @@ void BeliefManager::addBelief(const ManagedBelief& mb)
 {
     belief_set_.insert(mb);
     if(this->get_parameter(PARAM_DEBUG).as_bool())
-        RCLCPP_INFO(this->get_logger(), "Added belief ("+mb.pddlTypeString()+"): " + 
+        RCLCPP_INFO(this->get_logger(), ("Added belief ("+mb.pddlTypeString()+"): " + 
             mb.getName() + " " + (mb.pddlType() == Belief().INSTANCE_TYPE? mb.type().name : mb.getParamsJoined()) + 
                 ((mb.pddlType() == Belief().FUNCTION_TYPE)?
-                " (value = " + std::to_string(mb.getValue()) +")" : "")
+                " (value = " + std::to_string(mb.getValue()) +")" : "")).c_str()
             );
                     
 }
@@ -713,10 +713,10 @@ void BeliefManager::modifyBelief(const ManagedBelief& mb)
         belief_set_.erase(mb);
         belief_set_.insert(mb);
         if(this->get_parameter(PARAM_DEBUG).as_bool())
-            RCLCPP_INFO(this->get_logger(), "Modified belief ("+mb.pddlTypeString()+"): " + 
+            RCLCPP_INFO(this->get_logger(), ("Modified belief ("+mb.pddlTypeString()+"): " + 
                 mb.getName() + " " + (mb.pddlType() == Belief().INSTANCE_TYPE? mb.type().name : mb.getParamsJoined()) + 
                 ((mb.pddlType() == Belief().FUNCTION_TYPE)?
-                " (value = " + std::to_string(mb.getValue()) +")" : "")
+                " (value = " + std::to_string(mb.getValue()) +")" : "")).c_str()
             );
     }
 }
@@ -728,10 +728,10 @@ void BeliefManager::delBelief(const ManagedBelief& mb)
 {
     belief_set_.erase(mb);
     if(this->get_parameter(PARAM_DEBUG).as_bool())
-        RCLCPP_INFO(this->get_logger(), "Removed belief ("+mb.pddlTypeString()+"): " + 
+        RCLCPP_INFO(this->get_logger(), ("Removed belief ("+mb.pddlTypeString()+"): " + 
             mb.getName() + " " + (mb.pddlType() == Belief().INSTANCE_TYPE? mb.type().name : mb.getParamsJoined()) + 
             ((mb.pddlType() == Belief().FUNCTION_TYPE)?
-                " (value = " + std::to_string(mb.getValue()) +")" : "")
+                " (value = " + std::to_string(mb.getValue()) +")" : "")).c_str()
             );
 }
 

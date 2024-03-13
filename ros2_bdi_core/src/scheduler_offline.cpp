@@ -128,16 +128,16 @@ void SchedulerOffline::reschedule()
                         selectedPlan = mp;
                     
                     }else if(md.getPriority() < highestPriority && this->get_parameter(PARAM_DEBUG).as_bool()){
-                        RCLCPP_INFO(this->get_logger(), "There is a plan to fulfill desire \"" + md.getName() + "\", but "+ 
-                            "it it's not the desire (among which a plan can be selected) with highest priority right now");
+                        RCLCPP_INFO(this->get_logger(), ("There is a plan to fulfill desire \"" + md.getName() + "\", but "+ 
+                            "it it's not the desire (among which a plan can be selected) with highest priority right now").c_str() );
 
                     }else if(mp.getPlannedDeadline() >= selectedDeadline && this->get_parameter(PARAM_DEBUG).as_bool()){
-                        RCLCPP_INFO(this->get_logger(), "There is a plan to fulfill desire \"" + md.getName() + "\", but "+
-                            "it it's not the desire (among which a plan can be selected) with highest priority and earliest deadline right now");
+                        RCLCPP_INFO(this->get_logger(), ("There is a plan to fulfill desire \"" + md.getName() + "\", but "+
+                            "it it's not the desire (among which a plan can be selected) with highest priority and earliest deadline right now").c_str() );
                     }
 
                 }else if(this->get_parameter(PARAM_DEBUG).as_bool())
-                    RCLCPP_INFO(this->get_logger(), "There is a plan to fulfill desire \"" + md.getName() + "\", but it does not respect the deadline constraint");
+                    RCLCPP_INFO(this->get_logger(), ("There is a plan to fulfill desire \"" + md.getName() + "\", but it does not respect the deadline constraint").c_str() );
 
             }   
             else if(Scheduler::desireAcceptanceCheck(md) != ACCEPTED) //check if the problem is the goal not being valid          
@@ -147,7 +147,7 @@ void SchedulerOffline::reschedule()
             else 
             {
                 if(!this->get_parameter(PARAM_DEBUG).as_bool())
-                    RCLCPP_INFO(this->get_logger(), "Desire \"" + md.getName() + "\" presents a valid goal, but planner cannot compute any plan for it at the moment");
+                    RCLCPP_INFO(this->get_logger(), ("Desire \"" + md.getName() + "\" presents a valid goal, but planner cannot compute any plan for it at the moment").c_str() );
             }
         }
         else if(!explicitPreconditionSatisfied && this->get_parameter(PARAM_AUTOSUBMIT_PREC).as_bool())
@@ -171,8 +171,8 @@ void SchedulerOffline::reschedule()
                     if(desire_set_.count(fulfillPreconditionD) == 0 &&  precAcceptanceCheck == ACCEPTED)//fulfill precondition not inserted yet
                     {   
                         if(this->get_parameter(PARAM_DEBUG).as_bool())
-                            RCLCPP_INFO(this->get_logger(), "Precondition are not satisfied for desire \"" + md.getName() + "\" but could be satisfied: " +  
-                                +  " auto-submission desire \"" + fulfillPreconditionD.getName() + "\"");
+                            RCLCPP_INFO(this->get_logger(), ("Precondition are not satisfied for desire \"" + md.getName() + "\" but could be satisfied: " +  
+                                +  " auto-submission desire \"" + fulfillPreconditionD.getName() + "\"").c_str() );
                         fulfillPreconditionD.setParent(md);//set md as its parent desire
                         if(addDesire(fulfillPreconditionD, md, "_preconditions"))
                             pushed++;
@@ -196,8 +196,8 @@ void SchedulerOffline::reschedule()
             string desireOperation = (invCounter < maxTries && (desAcceptance == ACCEPTED || desAcceptance == UNKNOWN_INSTANCES))? 
                 "desire will be rescheduled later" : "desire will be deleted from desire set";
             if(this->get_parameter(PARAM_DEBUG).as_bool())
-                RCLCPP_INFO(this->get_logger(), "Desire \"" + md.getName() + "\" (or its preconditions):" +  desireProblem + " ; " +
-                    desireOperation + " (invalid counter = %d/%d). " + std::to_string(desAcceptance), invCounter, maxTries);
+                RCLCPP_INFO(this->get_logger(), ("Desire \"" + md.getName() + "\" (or its preconditions):" +  desireProblem + " ; " +
+                    desireOperation + " (invalid counter = %d/%d). " + std::to_string(desAcceptance)).c_str(), invCounter, maxTries);
             
             if(invCounter >= maxTries || (desAcceptance != ACCEPTED &&  desAcceptance != UNKNOWN_INSTANCES))//desire now has to be discarded
             {    
@@ -274,7 +274,7 @@ void SchedulerOffline::updatePlanExecution(const BDIPlanExecutionInfo::SharedPtr
                         "desire \"" + targetDesireName + "\" achieved will be removed from desire set" : 
                         "desire \"" + targetDesireName + "\" still not achieved! It'll not removed from the desire set yet";
                     
-                    RCLCPP_INFO(this->get_logger(), "Plan successfully executed: " + addNote);
+                    RCLCPP_INFO(this->get_logger(), ("Plan successfully executed: " + addNote).c_str() );
                 }
             }
 
@@ -284,14 +284,14 @@ void SchedulerOffline::updatePlanExecution(const BDIPlanExecutionInfo::SharedPtr
                 int maxPlanExecAttempts = this->get_parameter(PARAM_MAX_TRIES_EXEC_PLAN).as_int();
                 aborted_plan_desire_map_[targetDesireName]++;
                 
-                RCLCPP_INFO(this->get_logger(), "Plan execution for fulfilling desire \"" + targetDesireName + 
-                    "\" has been aborted for the %d time (max attempts: %d)", 
+                RCLCPP_INFO(this->get_logger(), ("Plan execution for fulfilling desire \"" + targetDesireName + 
+                    "\" has been aborted for the %d time (max attempts: %d)").c_str(), 
                         aborted_plan_desire_map_[targetDesireName], maxPlanExecAttempts);
                 
                 if(aborted_plan_desire_map_[targetDesireName] >= maxPlanExecAttempts)
                 {
                     if(this->get_parameter(PARAM_DEBUG).as_bool())
-                        RCLCPP_INFO(this->get_logger(), "Desire \"" + targetDesireName + "\" will be removed because it doesn't seem feasible to fulfill it: too many plan abortions!");
+                        RCLCPP_INFO(this->get_logger(), ("Desire \"" + targetDesireName + "\" will be removed because it doesn't seem feasible to fulfill it: too many plan abortions!").c_str() );
                     delDesire(targetDesire, true);
                 
                 }else if(!targetDesire.getContext().isSatisfied(belief_set_) && this->get_parameter(PARAM_AUTOSUBMIT_CONTEXT).as_bool()){
@@ -310,8 +310,8 @@ void SchedulerOffline::updatePlanExecution(const BDIPlanExecutionInfo::SharedPtr
                         if(desire_set_.count(fulfillContextD) == 0 && desireAcceptanceCheck(fulfillContextD) == ACCEPTED)
                         {
                             if(this->get_parameter(PARAM_DEBUG).as_bool())
-                                RCLCPP_INFO(this->get_logger(), "Context conditions are not satisfied for desire \"" + targetDesire.getName() + "\" but could be satisfied: " +  
-                                    +  " auto-submission desire \"" + fulfillContextD.getName() + "\"");
+                                RCLCPP_INFO(this->get_logger(), ("Context conditions are not satisfied for desire \"" + targetDesire.getName() + "\" but could be satisfied: " +  
+                                    +  " auto-submission desire \"" + fulfillContextD.getName() + "\"").c_str() );
                             fulfillContextD.setParent(targetDesire);//set md as its parent desire
                             addDesire(fulfillContextD, targetDesire, "_context");
                         }
@@ -387,8 +387,8 @@ void SchedulerOffline::boostDesireTopicCallBack(const ros2_bdi_interfaces::msg::
                 bool result = !found && addDesire(mdBoost);//then add it as a separate desire (if not already there)
                 if(this->get_parameter(PARAM_DEBUG).as_bool())
                 {
-                    RCLCPP_INFO(this->get_logger(), "Active desire " + fulfilling_desire_.getNameValue() +
-                        "cannot be boosted with " + mdBoost.getNameValue()  + (result? " which has been added to the dset" : "which has NOT been added to the dset"));
+                    RCLCPP_INFO(this->get_logger(), ("Active desire " + fulfilling_desire_.getNameValue() +
+                        "cannot be boosted with " + mdBoost.getNameValue()  + (result? " which has been added to the dset" : "which has NOT been added to the dset")).c_str() );
                 }
             }
         }
@@ -441,9 +441,9 @@ void SchedulerOffline::checkForSatisfiedDesires()
                 if(plan_progress_status < COMPLETED_THRESHOLD)
                 {
                     if(this->get_parameter(PARAM_DEBUG).as_bool())
-                        RCLCPP_INFO(this->get_logger(), "Current plan execution fulfilling desire \"" + md.getName() + 
+                        RCLCPP_INFO(this->get_logger(), ("Current plan execution fulfilling desire \"" + md.getName() + 
                             "\" will be aborted since desire is already fulfilled and plan exec. is still far from being completed " +
-                            "(progress status = %f)", plan_progress_status);
+                            "(progress status = %f)").c_str(), plan_progress_status);
 
                     //abort current plan execution since current target desire is already achieved and you're far from completing the plan (missing more than last action)
                     abortCurrentPlanExecution();   
@@ -452,8 +452,8 @@ void SchedulerOffline::checkForSatisfiedDesires()
             else
             {
                 if(this->get_parameter(PARAM_DEBUG).as_bool())
-                    RCLCPP_INFO(this->get_logger(), "Desire \"" + md.getName() + "\" will be removed from the desire set since its "+
-                        "target appears to be already fulfilled given the current belief set");
+                    RCLCPP_INFO(this->get_logger(), ("Desire \"" + md.getName() + "\" will be removed from the desire set since its "+
+                        "target appears to be already fulfilled given the current belief set").c_str() );
             
                 satisfiedDesires.push_back(md);//delete desire just if not executing one, otherwise will be deleted when aborted feedback comes and desire is satisfied
             }

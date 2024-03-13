@@ -118,7 +118,7 @@ bool PlanSysMonitorClient::isPsysNodeActive(const std::string& psysNodeName)
     }
     catch(const rclcpp::exceptions::RCLError& rclerr)
     {
-        RCLCPP_ERROR(node->get_logger(), rclerr.what());
+        RCLCPP_ERROR(node->get_logger(), rclerr.what() );
     }
     catch(const std::exception &e)
     {

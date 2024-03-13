@@ -19,7 +19,8 @@ find_package(ros2_bdi_utils REQUIRED)
 find_package(ros2_bdi_interfaces REQUIRED)
 find_package(javaff_interfaces REQUIRED)
 
-find_library(yaml-cpp REQUIRED)
+# find_library(yaml-cpp REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
 include_directories(include)
 

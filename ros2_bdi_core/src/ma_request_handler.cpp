@@ -11,6 +11,9 @@
 
 #include "ros2_bdi_utils/BDIFilter.hpp"
 
+#include "rclcpp/rclcpp.hpp"
+#include "rclcpp/callback_group.hpp"
+
 using std::string;
 using std::vector;
 using std::set;
@@ -92,7 +95,7 @@ void MARequestHandler::init()
               bind(&MARequestHandler::callbackLifecycleStatus, this, _1));
 
   // to make the belief/desire set subscription callbacks to run on different threads of execution wrt srv callbacks
-  callback_group_upd_subscribers_ = this->create_callback_group(rclcpp::callback_group::CallbackGroupType::Reentrant);
+  callback_group_upd_subscribers_ = this->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
   auto sub_opt = rclcpp::SubscriptionOptions();
   sub_opt.callback_group = callback_group_upd_subscribers_;
 
@@ -179,8 +182,8 @@ void MARequestHandler::init()
       acceptingDesiresMsg +=  (((i+1)==acceptingDesiresGroups.size()) ? "" : ", ");
     }
 
-  RCLCPP_INFO(this->get_logger(), "Multi-Agent Request Handler node initialized:\n" + 
-      acceptingBeliefsMsg + ";\n" + acceptingDesiresMsg);
+  RCLCPP_INFO(this->get_logger(), ("Multi-Agent Request Handler node initialized:\n" + 
+      acceptingBeliefsMsg + ";\n" + acceptingDesiresMsg).c_str() );
   
   
   do_work_timer_ = this->create_wall_timer(

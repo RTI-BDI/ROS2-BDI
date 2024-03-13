@@ -116,8 +116,8 @@ void SchedulerOnline::storeEnqueuePlan(BDIManaged::ManagedPlan&mp)
         string plan_queue_indexes = "";
         for(int i=0; i<waiting_plans_.size(); i++)
             plan_queue_indexes += std::to_string(waiting_plans_[i].getPlanQueueIndex()) + ", ";
-        RCLCPP_INFO(this->get_logger(), "Enqueued plan with index " + std::to_string(mp.getPlanQueueIndex()) + "\n" + 
-                            " Current waiting queue status: " + plan_queue_indexes + "");
+        RCLCPP_INFO(this->get_logger(), ("Enqueued plan with index " + std::to_string(mp.getPlanQueueIndex()) + "\n" + 
+                            " Current waiting queue status: " + plan_queue_indexes + "").c_str());
     }
 }
 
@@ -190,19 +190,19 @@ void SchedulerOnline::reschedule()
         bool ear = makeEarlyArrestRequest(current_plan_.getActionCommittedStatus());
         if(ear)
             waiting_clean_preempt_ = true;
-        RCLCPP_INFO(this->get_logger(), "Clean preemption to stop execution of plan for the fullfillment of Alex's desire to " + current_plan_.getFinalTarget().getName() + 
+        RCLCPP_INFO(this->get_logger(), ("Clean preemption to stop execution of plan for the fullfillment of Alex's desire to " + current_plan_.getFinalTarget().getName() + 
             " before starting to launch a search for the fullfillment of Alex's desire to " + selDesire.getName() + 
-            " (early arrest request = " + std::to_string(ear) + ")");
+            " (early arrest request = " + std::to_string(ear) + ")").c_str());
         return;
     }
 
-    RCLCPP_INFO(this->get_logger(), "Starting search for the fullfillment of Alex's desire to " + selDesire.getName());
+    RCLCPP_INFO(this->get_logger(), ("Starting search for the fullfillment of Alex's desire to " + selDesire.getName()).c_str());
 
     if(selDesire.getValue().size() > 0 && launchPlanSearch(selDesire))//a desire has effectively been selected && a search for it has been launched
     {    
         searching_ = true;
         search_baseline_ = emptySearchBaseline();
-        RCLCPP_INFO(this->get_logger(), "Search started for the fullfillment of Alex's desire to " + selDesire.getName());
+        RCLCPP_INFO(this->get_logger(), ("Search started for the fullfillment of Alex's desire to " + selDesire.getName()).c_str());
         fulfilling_desire_ = selDesire; 
     }
 }
@@ -214,14 +214,14 @@ void SchedulerOnline::abortedPlanHandler(const bool handleDelete)
     int maxPlanExecAttempts = this->get_parameter(PARAM_MAX_TRIES_EXEC_PLAN).as_int();
     aborted_plan_desire_map_[targetDesireName]++;
     
-    RCLCPP_INFO(this->get_logger(), "Plan execution for fulfilling desire \"" + targetDesireName + 
-        "\" has been aborted for the %d time (max attempts: %d)", 
+    RCLCPP_INFO(this->get_logger(), ("Plan execution for fulfilling desire \"" + targetDesireName + 
+        "\" has been aborted for the %d time (max attempts: %d)").c_str(), 
             aborted_plan_desire_map_[targetDesireName], maxPlanExecAttempts);
     
     if(handleDelete && aborted_plan_desire_map_[targetDesireName] >= maxPlanExecAttempts)
     {
         if(this->get_parameter(PARAM_DEBUG).as_bool())
-            RCLCPP_INFO(this->get_logger(), "Desire \"" + targetDesireName + "\" will be removed because it doesn't seem feasible to fulfill it: too many plan abortions!");
+            RCLCPP_INFO(this->get_logger(), ("Desire \"" + targetDesireName + "\" will be removed because it doesn't seem feasible to fulfill it: too many plan abortions!").c_str());
         delDesire(fulfilling_desire_, true);
     }
 }
@@ -236,8 +236,8 @@ void SchedulerOnline::planCompFailureHandler(const BDIManaged::ManagedDesire& md
     int maxTries = this->get_parameter(PARAM_MAX_TRIES_COMP_PLAN).as_int();
     string desireOperation = (invCounter < maxTries)? "desire will be rescheduled later" : "desire will be deleted from desire set";
     if(this->get_parameter(PARAM_DEBUG).as_bool())
-        RCLCPP_INFO(this->get_logger(), "Desire \"" + md.getName() + "\" (or its preconditions): plan search failed; " +
-        desireOperation + " (invalid counter = %d/%d).", invCounter, maxTries);
+        RCLCPP_INFO(this->get_logger(), ("Desire \"" + md.getName() + "\" (or its preconditions): plan search failed; " +
+        desireOperation + " (invalid counter = %d/%d).").c_str(), invCounter, maxTries);
 
     if(handleDelete && invCounter >= maxTries)//desire needs to be discarded, because a plan has tried to be unsuccessfully computed for it too many times
         delDesire(md, true);
@@ -365,12 +365,12 @@ void SchedulerOnline::updatePlanExecution(const BDIPlanExecutionInfo::SharedPtr 
                             for(int i=0; i<waiting_plans_.size(); i++)
                                 plan_queue_indexes += std::to_string(waiting_plans_[i].getPlanQueueIndex()) + ", ";
                             if(triggeredNewPlanExec)
-                                RCLCPP_INFO(this->get_logger(), "Started plan with index " + std::to_string(executing_pplan_index_) + "\n" + 
-                                                    " Current waiting queue status: " + plan_queue_indexes + "\"");
+                                RCLCPP_INFO(this->get_logger(), ("Started plan with index " + std::to_string(executing_pplan_index_) + "\n" + 
+                                                    " Current waiting queue status: " + plan_queue_indexes + "\"").c_str());
                             else
-                                RCLCPP_INFO(this->get_logger(), "Failed to start new plan with index " + std::to_string(nextPPlanToExec.value().getPlanQueueIndex()) + "\n" +
+                                RCLCPP_INFO(this->get_logger(), ("Failed to start new plan with index " + std::to_string(nextPPlanToExec.value().getPlanQueueIndex()) + "\n" +
                                                     " Calling unexpectedState service\n" + 
-                                                    " Current waiting queue status: " + plan_queue_indexes + "\"");
+                                                    " Current waiting queue status: " + plan_queue_indexes + "\"").c_str());
                         }
                     }
                 }
@@ -617,7 +617,7 @@ bool SchedulerOnline::makeEarlyArrestRequest(const plansys2_msgs::msg::Plan& com
                 " aiming to fulfill desire " + current_plan_.getFinalTarget().getName() + ":\n";
         for(auto a : committedPlan.items)
             early_arrest_request_content += std::to_string(a.committed) + "\t" + a.action + ":" + std::to_string(static_cast<int>(1000*a.time)) + "\n";
-        RCLCPP_INFO(this->get_logger(), early_arrest_request_content);
+        RCLCPP_INFO(this->get_logger(), early_arrest_request_content.c_str());
     }
 
     early_abort_bdiplan.context = current_plan_.getContext().toConditionsDNF();
@@ -761,9 +761,9 @@ void SchedulerOnline::checkForSatisfiedDesires()
                 if(plan_progress_status < COMPLETED_THRESHOLD)
                 {
                     if(this->get_parameter(PARAM_DEBUG).as_bool())
-                        RCLCPP_INFO(this->get_logger(), "Current plan execution fulfilling desire \"" + md.getName() + 
+                        RCLCPP_INFO(this->get_logger(), ("Current plan execution fulfilling desire \"" + md.getName() + 
                             "\" will be aborted since desire is already fulfilled and plan exec. is still far from being completed " +
-                            "(progress status = %f)", plan_progress_status);
+                            "(progress status = %f)").c_str(), plan_progress_status);
 
                     if(abortCurrentPlanExecution())
                         resetSearchInfo();
@@ -772,8 +772,8 @@ void SchedulerOnline::checkForSatisfiedDesires()
             else
             {
                 if(this->get_parameter(PARAM_DEBUG).as_bool())
-                    RCLCPP_INFO(this->get_logger(), "Desire \"" + md.getName() + "\" will be removed from the desire set since its "+
-                        "target appears to be already fulfilled given the current belief set");
+                    RCLCPP_INFO(this->get_logger(), ("Desire \"" + md.getName() + "\" will be removed from the desire set since its "+
+                        "target appears to be already fulfilled given the current belief set").c_str());
             
                 satisfiedDesires.push_back(md);//delete desire just if not executing one, otherwise will be deleted when aborted feedback comes and desire is satisfied
             }
@@ -848,8 +848,8 @@ void SchedulerOnline::boostDesireTopicCallBack(const Desire::SharedPtr msg)
             bool result = !found && addDesire(mdBoost);//then add it as a separate desire
             if(this->get_parameter(PARAM_DEBUG).as_bool())
             {
-                RCLCPP_INFO(this->get_logger(), "Desire " + fulfilling_desire_.getNameValue() +
-                    "cannot be boosted with " + mdBoost.getNameValue()  + (result? " which has been added to the dset" : ""));
+                RCLCPP_INFO(this->get_logger(), ("Desire " + fulfilling_desire_.getNameValue() +
+                    "cannot be boosted with " + mdBoost.getNameValue()  + (result? " which has been added to the dset" : "")).c_str());
             }
         }
     }
