@@ -51,7 +51,7 @@ class Recycle : public BDIActionExecutor
 
         void sendGoal();
 
-        void goal_response_callback(std::shared_future<rclcpp_action::ClientGoalHandle<litter_world_interfaces::action::CmdLoad>::SharedPtr> future);
+        void goal_response_callback(std::shared_ptr<rclcpp_action::ClientGoalHandle<litter_world_interfaces::action::CmdLoad>> future);
 
         void feedback_callback(
             rclcpp_action::ClientGoalHandle<litter_world_interfaces::action::CmdLoad>::SharedPtr,

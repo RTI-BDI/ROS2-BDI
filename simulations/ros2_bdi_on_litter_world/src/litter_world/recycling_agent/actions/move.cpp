@@ -110,14 +110,14 @@ class Move : public BDIActionExecutor
             goal_msg.cmd.y = goalCell.y - currentCell.y;
 
             auto send_goal_options = rclcpp_action::Client<CmdPose>::SendGoalOptions();
-            send_goal_options.goal_response_callback = std::bind(&Move::goal_response_callback, this, _1);
+            send_goal_options.goal_response_callback = std::bind(&Move::goal_response_callback, this, std::placeholders::_1);
             send_goal_options.feedback_callback = std::bind(&Move::feedback_callback, this, _1, _2);
             send_goal_options.result_callback = std::bind(&Move::result_callback, this, _1);
             this->client_cmd_pose_ptr_->async_send_goal(goal_msg, send_goal_options);
             goal_sent_ = true;
         }
 
-        void goal_response_callback(std::shared_future<GoalHandleCmdPose::SharedPtr> future)
+        void goal_response_callback(std::shared_ptr<GoalHandleCmdPose> future)
         {
             auto goal_handle = future.get();
             if (!goal_handle) 

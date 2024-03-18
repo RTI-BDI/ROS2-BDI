@@ -146,7 +146,7 @@ class LitterPickup : public BDIActionExecutor
             litter_removed_goal_sent_ = true;
         }
 
-        void litter_removed_goal_response_callback(std::shared_future<GoalHandleCmdPose::SharedPtr> future)
+        void litter_removed_goal_response_callback(std::shared_ptr<GoalHandleCmdPose> future)
         {
             auto goal_handle = future.get();
             if (!goal_handle) 
@@ -203,7 +203,7 @@ class LitterPickup : public BDIActionExecutor
             litter_load_goal_sent_ = true;
         }
 
-        void litter_load_goal_response_callback(std::shared_future<GoalHandleCmdLoad::SharedPtr> future)
+        void litter_load_goal_response_callback(std::shared_ptr<GoalHandleCmdLoad> future)
         {
             auto goal_handle = future.get();
             if (!goal_handle) 

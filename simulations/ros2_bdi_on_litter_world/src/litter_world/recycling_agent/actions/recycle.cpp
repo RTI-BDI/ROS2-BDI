@@ -43,7 +43,7 @@ void Recycle::sendGoal()
     goal_sent_ = true;
 }
 
-void Recycle::goal_response_callback(std::shared_future<GoalHandleCmdLoad::SharedPtr> future)
+void Recycle::goal_response_callback(std::shared_ptr<GoalHandleCmdLoad> future)
 {
     auto goal_handle = future.get();
     if (!goal_handle) 

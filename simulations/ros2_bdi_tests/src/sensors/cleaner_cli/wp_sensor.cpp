@@ -46,7 +46,7 @@ class WPSensor : public Sensor
             {
                 this->sense(waypoints[counter_], ADD);
                 if(this->get_parameter(PARAM_DEBUG).as_bool() && this->getBeliefPrototype("waypoint").has_value())
-                    RCLCPP_INFO(this->get_logger(), "WaypointSensor sensing for instance of type " + this->getBeliefPrototype("waypoint").value().type +  " has been sensed: " + waypoints[counter_].name);
+                    RCLCPP_INFO(this->get_logger(), ("WaypointSensor sensing for instance of type " + this->getBeliefPrototype("waypoint").value().type +  " has been sensed: " + waypoints[counter_].name).c_str());
                 counter_++;
             }
             else
