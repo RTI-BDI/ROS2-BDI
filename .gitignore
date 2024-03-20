@@ -59,3 +59,5 @@ CATKIN_IGNORE
 log_dependencies.txt
 
 ROS2-BDI/ros2_bdi_utils/src/BDIPlanLibrary.old.cpp
+
+.DS_Store

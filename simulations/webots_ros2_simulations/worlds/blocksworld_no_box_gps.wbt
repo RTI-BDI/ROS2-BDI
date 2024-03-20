@@ -1,4 +1,9 @@
-#VRML_SIM R2022a utf8
+#VRML_SIM R2022b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/Floor.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+
 WorldInfo {
   info [
     "Demo of a gantry robot playing the Hanoi Towers."
@@ -695,7 +700,6 @@ DEF PLATFORM_C Solid {
 DEF DEPOSIT_A Solid {
   translation 2 5.8 0
   rotation 0 0 1 -1.5707953071795862
-  scale 5 5 5
   children [
     DEF DEPOSITA_SHAPE Shape {
       appearance PBRAppearance {
@@ -718,7 +722,6 @@ DEF DEPOSIT_A Solid {
 DEF DEPOSIT_B Solid {
   translation -0.5 5.8 0
   rotation 0 0 1 -1.5707953071795862
-  scale 5 5 5
   children [
     DEF DEPOSITB_SHAPE Shape {
       appearance PBRAppearance {
@@ -741,7 +744,6 @@ DEF DEPOSIT_B Solid {
 DEF DEPOSIT_C Solid {
   translation -3 5.8 0
   rotation 0 0 1 -1.5707953071795862
-  scale 5 5 5
   children [
     DEF DEPOSITC_SHAPE Shape {
       appearance PBRAppearance {

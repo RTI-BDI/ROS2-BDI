@@ -1,4 +1,9 @@
-#VRML_SIM R2022a utf8
+#VRML_SIM R2022b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/Floor.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+
 WorldInfo {
 }
 Viewpoint {
@@ -27,7 +32,7 @@ Robot {
       endPoint Solid {
         translation 0 0.045 0.025
         children [
-          DEF WHEEL Transform {
+          DEF WHEEL Pose {
             rotation 1 0 0 1.5707996938995747
             children [
               Shape {
@@ -71,7 +76,7 @@ Robot {
         }
       }
     }
-    Transform {
+    Pose {
       translation 0 0 0.0415
       children [
         Shape {
@@ -91,7 +96,7 @@ Robot {
       translation 0.042 0.02 0.063
       rotation 0 0 1 0.5236003061004253
       children [
-        DEF SENSOR Transform {
+        DEF SENSOR Pose {
           rotation 0 1 0 1.5708
           children [
             Shape {
@@ -133,7 +138,7 @@ Robot {
       aperture 1
     }
   ]
-  boundingObject Transform {
+  boundingObject Pose {
     translation 0 0 0.0415
     children [
       USE BODY
@@ -160,7 +165,7 @@ Robot {
       endPoint Solid {
         translation 0.0 0.045 0.025
         children [
-          DEF WHEEL Transform {
+          DEF WHEEL Pose {
             rotation 1 0 0 1.5707996938995747
             children [
               Shape {
@@ -204,7 +209,7 @@ Robot {
         }
       }
     }
-    Transform {
+    Pose {
       translation 0 0 0.0415
       children [
         Shape {
@@ -224,7 +229,7 @@ Robot {
       translation 0.042 0.02 0.063
       rotation 0 0 1 0.5236003061004253
       children [
-        DEF SENSOR Transform {
+        DEF SENSOR Pose {
           rotation 0 1 0 1.5708
           children [
             Shape {
@@ -266,7 +271,7 @@ Robot {
       aperture 1
     }
   ]
-  boundingObject Transform {
+  boundingObject Pose {
     translation 0 0 0.0415
     children [
       USE BODY
