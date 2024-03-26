@@ -25,7 +25,7 @@ PlanSysMonitor::PlanSysMonitor() : rclcpp::Node(PSYS_MONITOR_NODE_NAME)
     this->declare_parameter(PARAM_PLANNING_MODE, PLANNING_MODE_OFFLINE);
 
     sel_planning_mode_ = this->get_parameter(PARAM_PLANNING_MODE).as_string() == PLANNING_MODE_OFFLINE? OFFLINE : ONLINE;
-    this->undeclare_parameter(PARAM_PLANNING_MODE);
+    // this->undeclare_parameter(PARAM_PLANNING_MODE);
 
     psys_monitor_client_ = std::make_shared<PlanSysMonitorClient>(PSYS_MONITOR_NODE_NAME + string("_caller_"), sel_planning_mode_);
 }

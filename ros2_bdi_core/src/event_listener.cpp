@@ -38,7 +38,7 @@ EventListener::EventListener()
 
     sel_planning_mode_ = this->get_parameter(PARAM_PLANNING_MODE).as_string() == PLANNING_MODE_OFFLINE? OFFLINE : ONLINE;
     std::cout << "SELECTED PLANNING_MODE " << this->get_parameter(PARAM_PLANNING_MODE).as_string() << " " << std::to_string(sel_planning_mode_) << std::flush << std::endl;
-    this->undeclare_parameter(PARAM_PLANNING_MODE);
+    // this->undeclare_parameter(PARAM_PLANNING_MODE);
 }
 
 bool EventListener::init()

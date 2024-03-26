@@ -55,7 +55,7 @@ MARequestHandler::MARequestHandler()
   this->declare_parameter(PARAM_PLANNING_MODE, PLANNING_MODE_OFFLINE);
 
   sel_planning_mode_ = this->get_parameter(PARAM_PLANNING_MODE).as_string() == PLANNING_MODE_OFFLINE? OFFLINE : ONLINE;
-  this->undeclare_parameter(PARAM_PLANNING_MODE);
+  // this->undeclare_parameter(PARAM_PLANNING_MODE);
 }
 
 /*
